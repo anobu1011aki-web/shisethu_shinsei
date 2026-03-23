@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
     <meta charset="UTF-8">
-    <title>施設使用申請書システム_R6最終修正版</title>
+    <title>施設使用申請書システム_最終確定版</title>
     <style>
         /* =========================================
            画面表示用（入力フォーム）
@@ -19,7 +19,7 @@
         .date-entry-group { background: #fff; border: 1px solid #e2e8f0; padding: 12px; border-radius: 8px; margin-bottom: 10px; }
         .date-row { display: flex; gap: 10px; align-items: center; flex-wrap: nowrap; }
         .date-row input[type="date"] { width: 150px; }
-        .date-row select { width: auto; min-width: 80px; }
+        .date-row select { width: auto; min-width: 90px; }
         .ac-check-label { font-size: 12px; display: flex; align-items: center; cursor: pointer; background: #e0f2fe; padding: 4px 8px; border-radius: 4px; white-space: nowrap; }
         .ac-check-label input { width: auto; margin-right: 4px; }
 
@@ -32,31 +32,30 @@
         .total-price { font-size: 28px; font-weight: bold; color: var(--primary); }
         .calc-detail-live { font-size: 12px; margin-top: 8px; text-align: left; border-top: 1px solid #bfdbfe; padding-top: 8px; }
 
-        .print-btn { width: 100%; padding: 15px; background: var(--accent); color: white; border: none; border-radius: 8px; font-size: 16px; font-weight: bold; cursor: pointer; margin-top: 15px; transition: 0.2s; }
-        .print-btn:hover { background: #059669; }
+        .print-btn { width: 100%; padding: 15px; background: var(--accent); color: white; border: none; border-radius: 8px; font-size: 16px; font-weight: bold; cursor: pointer; margin-top: 15px; }
 
         /* =========================================
-           印刷・PDF出力用（1ページに収める調整）
+           印刷・PDF出力用（1ページ最適化）
            ========================================= */
         .print-only { display: none; }
         @media print {
             @page { size: A4; margin: 8mm 12mm; }
             .no-print-container { display: none !important; }
-            .print-only { display: block; width: 100%; height: 100%; color: #000; font-family: "MS Mincho", "Hiragino Mincho ProN", serif; }
+            .print-only { display: block; width: 100%; color: #000; font-family: "MS Mincho", "Hiragino Mincho ProN", serif; }
             .p-header { display: flex; justify-content: space-between; align-items: flex-start; }
             .p-receipt-table td { border: 1.2pt solid #000; width: 85px; height: 85px; text-align: center; vertical-align: top; font-size: 9pt; }
             .p-main-title { text-align: center; font-size: 18pt; font-weight: bold; margin: 5px 0; }
             .p-apply-date { text-align: right; font-size: 10pt; margin-bottom: 5px; }
             
             table.p-main-table { width: 100%; border-collapse: collapse; border: 1.2pt solid #000; table-layout: fixed; }
-            table.p-main-table th, table.p-main-table td { border: 0.8pt solid #000; padding: 6px; font-size: 10pt; height: 36px; vertical-align: middle; box-sizing: border-box; overflow: hidden; }
+            table.p-main-table th, table.p-main-table td { border: 0.8pt solid #000; padding: 4px 6px; font-size: 9.5pt; height: 34px; vertical-align: middle; box-sizing: border-box; }
             table.p-main-table th { font-weight: normal; text-align: center; }
 
             .stamp-org-box { width: 100px; height: 100px; text-align: center; font-size: 9pt; vertical-align: top; border-left: 1.2pt solid #000; }
-            .p-total-line { margin-top: 25px; text-align: center; font-size: 18pt; font-weight: bold; }
+            .p-total-line { margin-top: 20px; text-align: center; font-size: 18pt; font-weight: bold; }
             .p-total-line span { border-bottom: 1.5pt solid #000; padding: 0 60px; }
-            .footer-note { font-size: 8.5pt; margin-top: 10px; border: 0.8pt solid #000; padding: 6px; line-height: 1.4; }
-            .stamp-box-small { border: 0.8pt solid #000; width: 55px; height: 55px; float: right; margin-top: -10px; text-align: center; font-size: 9pt; line-height: 55px; }
+            .footer-note { font-size: 8pt; margin-top: 8px; border: 0.8pt solid #000; padding: 6px; line-height: 1.4; }
+            .stamp-box-small { border: 0.8pt solid #000; width: 55px; height: 55px; float: right; margin-top: -8px; text-align: center; font-size: 9pt; line-height: 55px; }
         }
     </style>
 </head>
@@ -82,10 +81,17 @@
                 <option value="高校生以下">高校生以下</option>
                 <option value="その他一般" selected>その他一般</option>
             </select>
+            <label>使用施設</label>
+            <select id="fac_fixed" onchange="calc()">
+                <option value="体育館">体育館</option>
+                <option value="会議室AB" selected>会議室 AB</option>
+                <option value="会議室A">会議室 A</option>
+                <option value="会議室B">会議室 B</option>
+            </select>
         </div>
     </div>
 
-    <label>使用日時・施設設定（最大3件）</label>
+    <label>使用日時設定（最大3予約）</label>
     <div id="date_entries">
         <script>
             for(let i=1; i<=3; i++) {
@@ -96,32 +102,26 @@
                         <input type="date" id="date_${i}" onchange="calc()">
                         <select id="time_s${i}" onchange="calc()">${getTimeOptions("09:00")}</select> ～
                         <select id="time_e${i}" onchange="calc()">${getTimeOptions("12:00")}</select>
-                        <select id="fac_${i}" onchange="calc()" style="width:120px">
-                            <option value="体育館">体育館</option>
-                            <option value="会議室AB" selected>会議室 AB</option>
-                            <option value="会議室A">会議室 A</option>
-                            <option value="会議室B">会議室 B</option>
-                        </select>
                         <label class="ac-check-label"><input type="checkbox" id="ac_${i}" onchange="calc()">空調あり</label>
                     </div>
                 </div>`);
             }
             function getTimeOptions(def) {
                 let options = "";
-                for(let h=8; h<=21; h++) {
-                    for(let m of ["00", "15", "30", "45"]) {
+                for(let h=9; h<=20; h++) {
+                    for(let m of ["00", "30"]) {
                         let t = h.toString().padStart(2, '0') + ":" + m;
                         options += `<option value="${t}" ${t===def?'selected':''}>${t}</option>`;
                     }
                 }
-                options += `<option value="22:00">22:00</option>`;
+                options += `<option value="21:00">21:00</option>`;
                 return options;
             }
         </script>
     </div>
 
     <div class="equipment-area">
-        <label>附帯設備（備品など）</label>
+        <label>附帯設備</label>
         <div class="eq-row">
             <label class="eq-item"><input type="checkbox" id="check_audio">音響</label>
             <label class="eq-item"><input type="checkbox" id="check_mic">マイク(<input type="number" id="in_mic_count" value="0" style="width:40px; padding:2px; margin:0 3px;">本)</label>
@@ -166,7 +166,7 @@
             <th style="width: 70px;">人数</th><td id="p_people" style="text-align: center;"></td>
         </tr>
         <tr>
-            <th colspan="2" style="height: 85px; border: 1.2pt solid #000;">附帯設備</th>
+            <th colspan="2" style="height: 75px; border: 1.2pt solid #000;">附帯設備</th>
             <td colspan="4" style="font-size: 9pt; vertical-align: top;">
                 <span id="eq_audio">□</span>音響　<span id="eq_mic">□</span>マイク(<span id="p_mic_count"></span>本)　<span id="eq_entai">□</span>演台　<span id="eq_proj">□</span>映像設備<br>
                 <span id="eq_other">□</span>その他(<span id="p_eq_other"></span>)
@@ -179,22 +179,23 @@
             </td>
         </tr>
         <tr>
-            <th colspan="2" style="height: 120px; border: 1.2pt solid #000;">使用日時<br>・施設</th>
-            <td colspan="4" style="vertical-align: top; line-height: 1.8;">
+            <th colspan="2" style="height: 100px; border: 1.2pt solid #000;">使用日時<br>・施設</th>
+            <td colspan="4" style="vertical-align: top; line-height: 1.6; font-size: 9pt;">
+                <div id="p_fac_display" style="font-weight:bold; margin-bottom:3px;"></div>
                 <div id="p_date1"></div><div id="p_date2"></div><div id="p_date3"></div>
             </td>
         </tr>
         <tr>
             <th rowspan="4" style="width: 35px; border: 1.2pt solid #000;">料<br>金<br>内<br>訳</th>
-            <th>時間区別</th><td colspan="4" style="text-align: center; font-size: 9pt;">＠(単価+空調)円 × 使用時間</td>
+            <th>時間区別</th><td colspan="4" style="text-align: center; font-size: 8pt;">平日(9-17時)昼間 ／ 平日(17-21時)夜間・休日 全日</td>
         </tr>
-        <tr><th>予約１</th><td colspan="4" id="p_row1"></td></tr>
-        <tr><th>予約２</th><td colspan="4" id="p_row2"></td></tr>
-        <tr><th>予約３</th><td colspan="4" id="p_row3"></td></tr>
+        <tr><th>予約１</th><td colspan="4" id="p_row1" style="font-size: 8.5pt;"></td></tr>
+        <tr><th>予約２</th><td colspan="4" id="p_row2" style="font-size: 8.5pt;"></td></tr>
+        <tr><th>予約３</th><td colspan="4" id="p_row3" style="font-size: 8.5pt;"></td></tr>
     </table>
 
     <div class="footer-note">
-        【空調代/h】会議室AB:550円、A:330円、B:220円（体育館は0円） ※平日17時以降は夜間料金適用 [cite: 183]。
+        【空調代/h】会議室AB:550円、A:330円、B:220円（体育館は0円） ※平日17時以降は夜間料金適用 [cite: 180]。
     </div>
     <div class="p-total-line">一　金　￥ <span id="p_total_sum"></span> －</div>
     <div class="stamp-box-small">担当</div>
@@ -213,6 +214,7 @@
 
     function calc() {
         const cat = document.getElementById('in_category').value;
+        const fac = document.getElementById('fac_fixed').value;
         let grandTotal = 0;
         let logHtml = "";
 
@@ -220,12 +222,11 @@
             const dStr = document.getElementById('date_' + i).value;
             const sStr = document.getElementById('time_s' + i).value;
             const eStr = document.getElementById('time_e' + i).value;
-            const fac = document.getElementById('fac_' + i).value;
             const isAC = document.getElementById('ac_' + i).checked;
 
             if (dStr && sStr && eStr) {
                 const d = new Date(dStr);
-                const isW = (d.getDay() === 0 || d.getDay() === 6); // 土日判定
+                const isW = (d.getDay() === 0 || d.getDay() === 6);
                 const hs = parseInt(sStr.split(':')[0]) + parseInt(sStr.split(':')[1])/60;
                 const he = parseInt(eStr.split(':')[0]) + parseInt(eStr.split(':')[1])/60;
                 const totalHours = Math.max(0, he - hs);
@@ -234,23 +235,31 @@
                 const r = RATES[fac][targetCat];
                 const acFee = isAC ? AC_VALS[fac] : 0;
 
+                let rowText = "";
                 let rowTotal = 0;
+
                 if (isW) {
                     rowTotal = (r.w + acFee) * totalHours;
+                    rowText = `(休日) ＠${(r.w + acFee).toLocaleString()}円 × ${totalHours.toFixed(1)}h ＝ ${Math.ceil(rowTotal).toLocaleString()}円`;
                 } else {
-                    // 夜間17:00跨ぎの精密計算
                     const dayH = Math.max(0, Math.min(he, 17) - Math.min(hs, 17));
                     const nightH = Math.max(0, Math.max(he, 17) - Math.max(hs, 17));
-                    rowTotal = ((r.d + acFee) * dayH) + ((r.n + acFee) * nightH);
+                    const dayAmt = (r.d + acFee) * dayH;
+                    const nightAmt = (r.n + acFee) * nightH;
+                    rowTotal = dayAmt + nightAmt;
+
+                    if (dayH > 0 && nightH > 0) {
+                        rowText = `(昼)＠${(r.d + acFee).toLocaleString()}×${dayH.toFixed(1)}h + (夜)＠${(r.n + acFee).toLocaleString()}×${nightH.toFixed(1)}h ＝ ${Math.ceil(rowTotal).toLocaleString()}円`;
+                    } else if (nightH > 0) {
+                        rowText = `(夜間) ＠${(r.n + acFee).toLocaleString()}円 × ${nightH.toFixed(1)}h ＝ ${Math.ceil(rowTotal).toLocaleString()}円`;
+                    } else {
+                        rowText = `(昼間) ＠${(r.d + acFee).toLocaleString()}円 × ${dayH.toFixed(1)}h ＝ ${Math.ceil(rowTotal).toLocaleString()}円`;
+                    }
                 }
                 
-                const avgUnit = Math.round(rowTotal / totalHours);
-                const subTotal = Math.ceil(rowTotal);
-                const rowText = `＠${avgUnit.toLocaleString()}円 × ${totalHours.toFixed(2)}h ＝ ${subTotal.toLocaleString()}円`;
-                
-                grandTotal += subTotal;
+                grandTotal += Math.ceil(rowTotal);
                 document.getElementById('p_row' + i).innerText = rowText;
-                logHtml += `<div><strong>予約${i} [${fac}]:</strong> ${rowText}</div>`;
+                logHtml += `<div><strong>予約${i}:</strong> ${rowText}</div>`;
             } else {
                 document.getElementById('p_row' + i).innerText = "";
             }
@@ -268,19 +277,20 @@
         });
         
         const cat = document.getElementById('in_category').value;
+        const fac = document.getElementById('fac_fixed').value;
         document.getElementById('cat_1').innerText = (cat === "加盟（入居）団体") ? "■" : "□";
         document.getElementById('cat_2').innerText = (cat === "高校生以下") ? "■" : "□";
         document.getElementById('cat_3').innerText = (cat === "その他一般") ? "■" : "□";
+        document.getElementById('p_fac_display').innerText = "使用施設：" + fac;
 
         for(let i=1; i<=3; i++) {
             const dV = document.getElementById('date_'+i).value;
-            const fac = document.getElementById('fac_'+i).value;
             const targetP = document.getElementById('p_date'+i);
             if(dV) {
                 const d = new Date(dV);
                 const w = ['日','月','火','水','木','金','土'];
                 const acT = document.getElementById('ac_'+i).checked ? "(空調有)" : "";
-                targetP.innerText = `予約${i}: ${getWareki(d)}年${d.getMonth()+1}月${d.getDate()}日(${w[d.getDay()]}) ${document.getElementById('time_s'+i).value}～${document.getElementById('time_e'+i).value} 【${fac}${acT}】`;
+                targetP.innerText = `予約${i}: ${getWareki(d)}年${d.getMonth()+1}月${d.getDate()}日(${w[d.getDay()]}) ${document.getElementById('time_s'+i).value}～${document.getElementById('time_e'+i).value} ${acT}`;
             } else { targetP.innerText = ""; }
         }
         ['audio','proj','entai','mic'].forEach(c => document.getElementById('eq_'+c).innerText = document.getElementById('check_'+c).checked ? "■" : "□");
