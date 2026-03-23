@@ -41,43 +41,30 @@
         /* =========================================
            印刷・PDF出力用（余白・バランス最適化）
            ========================================= */
+        .print-only { display: none; }
         @media print {
-            /* 1. 紙の物理的な余白を明示的に指定（上下15mm、左右20mm） */
-            @page { 
-                size: A4; 
-                margin: 15mm 20mm; 
-            }
-
+            @page { size: A4; margin: 12mm 15mm; }
             .no-print-container { display: none !important; }
-
-            /* 2. 全体を「95%」に縮小し、中央に配置する */
-            .print-only { 
-                display: block; 
-                width: 100%;       /* @pageの余白内での100% */
-                transform: scale(0.95); /* 全体を5%縮小して「切れ」を防止 */
-                transform-origin: top center; /* 上部中央を基準に縮小 */
-                color: #000; 
-                font-family: "MS Mincho", "Hiragino Mincho ProN", serif; 
-            }
+            .print-only { display: block; width: 100%; color: #000; font-family: "MS Mincho", "Hiragino Mincho ProN", serif; }
             
             /* 上部3段のスペース調整 */
-            .p-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 20px; }
-            .p-receipt-table td { border: 1.2pt solid #000; width: 85px; height: 85px; text-align: center; vertical-align: top; font-size: 10pt; padding-top: 4px; }
-            .p-main-title { text-align: center; font-size: 18pt; font-weight: bold; margin: 25px 0; letter-spacing: 2px; }
-            .p-address-row { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 15px; font-size: 11pt; }
+            .p-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 25px; }
+            .p-receipt-table td { border: 1.2pt solid #000; width: 90px; height: 90px; text-align: center; vertical-align: top; font-size: 10pt; padding-top: 4px; }
+            .p-main-title { text-align: center; font-size: 20pt; font-weight: bold; margin: 30px 0; letter-spacing: 2px; }
+            .p-address-row { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 20px; font-size: 11pt; }
             
-            /* 表全体のレイアウト調整 */
+            /* 表全体の行高と余白を拡張 */
             table.p-main-table { width: 100%; border-collapse: collapse; border: 1.5pt solid #000; table-layout: fixed; }
-            table.p-main-table th, table.p-main-table td { border: 0.8pt solid #000; padding: 5px 8px; font-size: 10pt; height: 38px; vertical-align: middle; box-sizing: border-box; }
+            table.p-main-table th, table.p-main-table td { border: 0.8pt solid #000; padding: 6px 10px; font-size: 10pt; height: 40px; vertical-align: middle; box-sizing: border-box; }
             table.p-main-table th { font-weight: normal; text-align: center; }
 
-            .stamp-org-box { width: 90px; height: 110px; text-align: center; font-size: 10pt; vertical-align: top; border-left: 1.2pt solid #000; padding-top: 5px; }
+            .stamp-org-box { width: 100px; height: 120px; text-align: center; font-size: 10pt; vertical-align: top; border-left: 1.2pt solid #000; padding-top: 5px; }
             
             /* 下部エリアのスペース調整 */
-            .p-total-line { margin-top: 35px; text-align: center; font-size: 18pt; font-weight: bold; }
-            .p-total-line span { border-bottom: 1.5pt solid #000; padding: 0 60px; }
-            .footer-note { font-size: 8.5pt; margin-top: 20px; border: 0.8pt solid #000; padding: 8px; line-height: 1.3; }
-            .stamp-box-small { border: 0.8pt solid #000; width: 60px; height: 60px; float: right; margin-top: -10px; text-align: center; font-size: 10pt; line-height: 60px; }
+            .p-total-line { margin-top: 40px; text-align: center; font-size: 20pt; font-weight: bold; }
+            .p-total-line span { border-bottom: 1.5pt solid #000; padding: 0 70px; }
+            .footer-note { font-size: 9pt; margin-top: 25px; border: 0.8pt solid #000; padding: 10px; line-height: 1.4; }
+            .stamp-box-small { border: 0.8pt solid #000; width: 65px; height: 65px; float: right; margin-top: -15px; text-align: center; font-size: 10pt; line-height: 65px; }
         }
     </style>
 </head>
