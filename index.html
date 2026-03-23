@@ -43,9 +43,21 @@
            ========================================= */
         .print-only { display: none; }
         @media print {
-            @page { size: A4; margin: 12mm 15mm; }
+            /* 1. 用紙全体の余白設定：少し広めに取ります */
+            @page { size: A4; margin: 15mm 20mm; } 
+            
             .no-print-container { display: none !important; }
-            .print-only { display: block; width: 100%; color: #000; font-family: "MS Mincho", "Hiragino Mincho ProN", serif; }
+            
+            /* 2. 全体を中央に寄せ、95%に微縮小して「切れ」を防止 */
+            .print-only { 
+                display: block; 
+                width: 95%;      /* 100%から95%に下げて余裕を作る */
+                margin: 0 auto;  /* 中央配置 */
+                transform: scale(0.95); /* 全体を5%縮小 */
+                transform-origin: top center;
+                color: #000; 
+                font-family: "MS Mincho", "Hiragino Mincho ProN", serif; 
+            }
             
             /* 上部3段のスペース調整 */
             .p-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 25px; }
@@ -53,8 +65,8 @@
             .p-main-title { text-align: center; font-size: 20pt; font-weight: bold; margin: 30px 0; letter-spacing: 2px; }
             .p-address-row { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 20px; font-size: 11pt; }
             
-            /* 表全体の行高と余白を拡張 */
-            table.p-main-table { width: 100%; border-collapse: collapse; border: 1.5pt solid #000; table-layout: fixed; }
+            /* 表全体の横幅も少しだけ余裕を持たせる */
+            table.p-main-table { width: 99%; border-collapse: collapse; border: 1.5pt solid #000; table-layout: fixed; }
             table.p-main-table th, table.p-main-table td { border: 0.8pt solid #000; padding: 6px 10px; font-size: 10pt; height: 40px; vertical-align: middle; box-sizing: border-box; }
             table.p-main-table th { font-weight: normal; text-align: center; }
 
