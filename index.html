@@ -39,32 +39,34 @@
         .print-btn:hover { background: #059669; }
 
         /* =========================================
-           印刷・PDF出力用（余白・バランス最適化）
+           印刷・PDF出力用（1枚に収める余白・高さ最適化）
            ========================================= */
         .print-only { display: none; }
         @media print {
-            @page { size: A4; margin: 12mm 15mm; }
+            @page { size: A4; margin: 10mm 15mm; } /* 余白を少し縮小 */
+            body { margin: 0; padding: 0; }
             .no-print-container { display: none !important; }
             .print-only { display: block; width: 100%; color: #000; font-family: "MS Mincho", "Hiragino Mincho ProN", serif; }
             
-            /* 上部3段のスペース調整 */
-            .p-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 25px; }
-            .p-receipt-table td { border: 1.2pt solid #000; width: 90px; height: 90px; text-align: center; vertical-align: top; font-size: 10pt; padding-top: 4px; }
-            .p-main-title { text-align: center; font-size: 20pt; font-weight: bold; margin: 30px 0; letter-spacing: 2px; }
-            .p-address-row { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 20px; font-size: 11pt; }
+            /* 上部スペースの縮小 */
+            .p-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 15px; }
+            .p-receipt-table td { border: 1.2pt solid #000; width: 80px; height: 80px; text-align: center; vertical-align: top; font-size: 10pt; padding-top: 4px; }
+            .p-main-title { text-align: center; font-size: 20pt; font-weight: bold; margin: 15px 0; letter-spacing: 2px; }
+            .p-address-row { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 10px; font-size: 11pt; }
             
-            /* 表全体の行高と余白を拡張 */
+            /* 表の行高さを少し縮小（1枚に収めるため） */
             table.p-main-table { width: 100%; border-collapse: collapse; border: 1.5pt solid #000; table-layout: fixed; }
-            table.p-main-table th, table.p-main-table td { border: 0.8pt solid #000; padding: 6px 10px; font-size: 10pt; height: 40px; vertical-align: middle; box-sizing: border-box; }
+            table.p-main-table th, table.p-main-table td { border: 0.8pt solid #000; padding: 4px 8px; font-size: 10pt; height: 33px; vertical-align: middle; box-sizing: border-box; }
             table.p-main-table th { font-weight: normal; text-align: center; }
 
-            .stamp-org-box { width: 100px; height: 120px; text-align: center; font-size: 10pt; vertical-align: top; border-left: 1.2pt solid #000; padding-top: 5px; }
+            /* 団体印ボックスを正方形に（高さ33px×4行=132pxに合わせて幅を132pxに） */
+            .stamp-org-box { width: 132px; text-align: center; vertical-align: middle; border-left: 1.5pt solid #000; }
             
-            /* 下部エリアのスペース調整 */
-            .p-total-line { margin-top: 40px; text-align: center; font-size: 20pt; font-weight: bold; }
+            /* 下部エリアのスペース縮小 */
+            .p-total-line { margin-top: 25px; text-align: center; font-size: 20pt; font-weight: bold; }
             .p-total-line span { border-bottom: 1.5pt solid #000; padding: 0 70px; }
-            .footer-note { font-size: 9pt; margin-top: 25px; border: 0.8pt solid #000; padding: 10px; line-height: 1.4; }
-            .stamp-box-small { border: 0.8pt solid #000; width: 65px; height: 65px; float: right; margin-top: -15px; text-align: center; font-size: 10pt; line-height: 65px; }
+            .footer-note { font-size: 9pt; margin-top: 15px; border: 0.8pt solid #000; padding: 8px; line-height: 1.4; }
+            .stamp-box-small { border: 0.8pt solid #000; width: 60px; height: 60px; float: right; margin-top: -10px; text-align: center; font-size: 10pt; line-height: 60px; }
         }
     </style>
 </head>
@@ -180,7 +182,11 @@
             <th rowspan="4" style="width: 35px; border: 1.5pt solid #000;">使<br>用<br>団<br>体</th>
             <th style="width: 90px;">団 体 名</th>
             <td colspan="3" id="p_orgName" style="font-weight: bold; font-size: 12pt;"></td>
-            <td rowspan="4" class="stamp-org-box">団体印<br><br><br><br>印</td>
+            <td rowspan="4" class="stamp-org-box">
+                <div style="margin-bottom: 5px;">団体印</div>
+                <div style="font-size: 8pt; margin-bottom: 25px;">※加盟(入居)団体必須</div>
+                <div>印</div>
+            </td>
         </tr>
         <tr><th>所 在 地</th><td colspan="3" id="p_address"></td></tr>
         <tr><th>代表者名</th><td colspan="3" id="p_repName"></td></tr>
@@ -193,7 +199,7 @@
             <th style="width: 70px;">人数</th><td id="p_people" style="text-align: center;"></td>
         </tr>
         <tr>
-            <th colspan="2" style="height: 140px; border: 1.5pt solid #000;">附帯設備</th>
+            <th colspan="2" style="height: 120px; border: 1.5pt solid #000;">附帯設備</th>
             <td colspan="4" style="font-size: 10pt; vertical-align: top; line-height: 1.5;">
                 【会議室】<br>
                 　<span id="eq_audio">□</span>音響設備　<span id="eq_mic">□</span>マイク(<span id="p_mic_count"></span>本)　<span id="eq_entai">□</span>演台　<span id="eq_proj">□</span>映像設備※<br>
@@ -211,18 +217,18 @@
             </td>
         </tr>
         <tr>
-            <th colspan="2" style="height: 110px; border: 1.5pt solid #000;">使用日時<br>・施設</th>
+            <th colspan="2" style="height: 100px; border: 1.5pt solid #000;">使用日時<br>・施設</th>
             <td colspan="4" style="vertical-align: top; line-height: 1.8; font-size: 10.5pt;">
                 <div id="p_date1"></div><div id="p_date2"></div><div id="p_date3"></div>
             </td>
         </tr>
         <tr>
             <th rowspan="4" style="width: 35px; border: 1.5pt solid #000;">料<br>金<br>内<br>訳</th>
-            <th style="height: 40px;">時間区別</th><td colspan="4" style="text-align: center; font-size: 9pt;">平日(9-17時)昼間 ／ 平日(17-21時)夜間・休日 全日</td>
+            <th style="height: 33px;">時間区別</th><td colspan="4" style="text-align: center; font-size: 9pt;">平日(9-17時)昼間 ／ 平日(17-21時)夜間・休日 全日</td>
         </tr>
-        <tr><th style="height: 40px;">予約１</th><td colspan="4" id="p_row1" style="font-size: 9.5pt;"></td></tr>
-        <tr><th style="height: 40px;">予約２</th><td colspan="4" id="p_row2" style="font-size: 9.5pt;"></td></tr>
-        <tr><th style="height: 40px;">予約３</th><td colspan="4" id="p_row3" style="font-size: 9.5pt;"></td></tr>
+        <tr><th style="height: 33px;">予約１</th><td colspan="4" id="p_row1" style="font-size: 9.5pt;"></td></tr>
+        <tr><th style="height: 33px;">予約２</th><td colspan="4" id="p_row2" style="font-size: 9.5pt;"></td></tr>
+        <tr><th style="height: 33px;">予約３</th><td colspan="4" id="p_row3" style="font-size: 9.5pt;"></td></tr>
     </table>
 
     <div class="footer-note">
@@ -241,6 +247,16 @@
     };
     const AC_VALS = { "会議室AB": 550, "会議室A": 330, "会議室B": 220, "体育館": 0 };
 
+    // ==========================================
+    // ▼ 2024年〜2027年の日本の祝日リスト（追加）▼
+    // ==========================================
+    const HOLIDAYS = [
+        "2024-01-01", "2024-01-08", "2024-02-11", "2024-02-12", "2024-02-23", "2024-03-20", "2024-04-29", "2024-05-03", "2024-05-04", "2024-05-05", "2024-05-06", "2024-07-15", "2024-08-11", "2024-08-12", "2024-09-16", "2024-09-22", "2024-09-23", "2024-10-14", "2024-11-03", "2024-11-04", "2024-11-23",
+        "2025-01-01", "2025-01-13", "2025-02-11", "2025-02-23", "2025-02-24", "2025-03-20", "2025-04-29", "2025-05-03", "2025-05-04", "2025-05-05", "2025-05-06", "2025-07-21", "2025-08-11", "2025-09-15", "2025-09-23", "2025-10-13", "2025-11-03", "2025-11-23", "2025-11-24",
+        "2026-01-01", "2026-01-12", "2026-02-11", "2026-02-23", "2026-03-20", "2026-04-29", "2026-05-03", "2026-05-04", "2026-05-05", "2026-05-06", "2026-07-20", "2026-08-11", "2026-09-21", "2026-09-22", "2026-09-23", "2026-10-12", "2026-11-03", "2026-11-23",
+        "2027-01-01", "2027-01-11", "2027-02-11", "2027-02-23", "2027-03-21", "2027-03-22", "2027-04-29", "2027-05-03", "2027-05-04", "2027-05-05", "2027-07-19", "2027-08-11", "2027-09-20", "2027-09-23", "2027-10-11", "2027-11-03", "2027-11-23"
+    ];
+
     function getWareki(date) { return `令和 ${date.getFullYear() - 2018}`; }
 
     function calc() {
@@ -250,14 +266,16 @@
 
         for (let i = 1; i <= 3; i++) {
             const fac = document.getElementById('fac_' + i).value; 
-            const dStr = document.getElementById('date_' + i).value;
+            const dStr = document.getElementById('date_' + i).value; // 形式: YYYY-MM-DD
             const sStr = document.getElementById('time_s' + i).value;
             const eStr = document.getElementById('time_e' + i).value;
             const isAC = document.getElementById('ac_' + i).checked;
 
             if (fac && dStr && sStr && eStr) {
                 const d = new Date(dStr);
-                const isW = (d.getDay() === 0 || d.getDay() === 6);
+                // 日曜(0)、土曜(6)、または祝日リストに含まれているかを判定
+                const isW = (d.getDay() === 0 || d.getDay() === 6 || HOLIDAYS.includes(dStr));
+                
                 const hs = parseInt(sStr.split(':')[0]) + parseInt(sStr.split(':')[1])/60;
                 const he = parseInt(eStr.split(':')[0]) + parseInt(eStr.split(':')[1])/60;
                 const totalHours = Math.max(0, he - hs);
@@ -320,8 +338,10 @@
             if(fac && dV) {
                 const d = new Date(dV);
                 const w = ['日','月','火','水','木','金','土'];
+                const isHoliday = HOLIDAYS.includes(dV) ? "祝" : w[d.getDay()];
                 const acT = document.getElementById('ac_'+i).checked ? "(空調有)" : "";
-                targetP.innerText = `予約${i}: ${getWareki(d)}年${d.getMonth()+1}月${d.getDate()}日(${w[d.getDay()]}) ${document.getElementById('time_s'+i).value}～${document.getElementById('time_e'+i).value} 【${fac}】 ${acT}`;
+                // 曜日部分に祝日表記も出るようにしました
+                targetP.innerText = `予約${i}: ${getWareki(d)}年${d.getMonth()+1}月${d.getDate()}日(${isHoliday}) ${document.getElementById('time_s'+i).value}～${document.getElementById('time_e'+i).value} 【${fac}】 ${acT}`;
             } else { 
                 targetP.innerText = ""; 
             }
