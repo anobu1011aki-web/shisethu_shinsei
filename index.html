@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>沖縄県スポーツ協会 施設使用申請</title>
+    <style>
+        /* アプリ感覚のモダンなデザイン */
+        :root {
+            --primary-color: #0056b3;
+            --bg-color: #f4f7f6;
+            --box-bg: #ffffff;
+            --text-color: #333;
+        }
+        body {
+            font-family: 'Helvetica Neue', Arial, 'Hiragino Kaku Gothic ProN', 'Hiragino Sans', Meiryo, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: var(--box-bg);
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+        }
+        h1 {
+            text-align: center;
+            color: var(--primary-color);
+            font-size: 1.5rem;
+            border-bottom: 2px solid var(--primary-color);
+            padding-bottom: 10px;
+            margin-bottom: 30px;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 8px;
+            font-size: 0.95rem;
+        }
+        input[type="text"], input[type="time"], input[type="date"], select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            box-sizing: border-box;
+            font-size: 1rem;
+        }
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 0;
+        }
+        .checkbox-group input {
+            transform: scale(1.5);
+            margin-right: 5px;
+        }
+        .alert-message {
+            color: #d9534f;
+            font-size: 0.9rem;
+            font-weight: bold;
+            margin-top: 5px;
+            display: none;
+        }
+        .result-box {
+            background-color: #e9ecef;
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 30px;
+            text-align: center;
+        }
+        .result-box h2 {
+            margin: 0 0 10px 0;
+            font-size: 1.2rem;
+        }
+        .total-price {
+            font-size: 2rem;
+            font-weight: bold;
+            color: var(--primary-color);
+        }
+        .btn-print {
+            display: block;
+            width: 100%;
+            padding: 15px;
+            background-color: var(--primary-color);
+            color: white;
+            text-align: center;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 20px;
+            transition: background-color 0.3s;
+        }
+        .btn-print:hover {
+            background-color: #004494;
+        }
+
+        /* 印刷（PDF出力）時の設定 */
+        @media print {
+            body { background-color: white; padding: 0; }
+            .container { box-shadow: none; padding: 0; }
+            .btn-print { display: none; } /* 印刷ボタンは消す */
+            input, select { border: none; border-bottom: 1px solid #000; border-radius: 0; padding: 5px; appearance: none; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>公益財団法人沖縄県スポーツ協会<br>施設使用申請書</h1>
+
+    <form id="appForm">
+        <div class="form-group">
+            <label>申請日</label>
+            <input type="date" id="applyDate" required>
+        </div>
+        <div class="form-group">
+            <label>使用団体名</label>
+            <input type="text" id="groupName" placeholder="例：一般社団法人〇〇" required>
+        </div>
+        
+        <div class="form-group">
+            <label>区分</label>
+            <select id="userType" onchange="calculate()">
+                <option value="加盟団体">加盟（入居）団体</option>
+                <option value="高校生以下">高校生以下</option>
+                <option value="一般" selected>その他一般</option>
+            </select>
+            <div id="stampAlert" class="alert-message">※加盟（入居）団体は団体印が必須です。</div>
+            <div id="youthAlert" class="alert-message">※申請・支払・当日の立会いは指導者または保護者が行ってください [cite: 22-25, 38]。</div>
+        </div>
+
+        <div class="form-group">
+            <label>使用施設（基本料金の計算用仮設定）</label>
+            <select id="facility" onchange="calculate()">
+                <option value="gym" data-basefee="1000">体育館 (仮:1000円/h)</option>
+                <option value="roomAB" data-basefee="800">会議室AB (仮:800円/h)</option>
+                <option value="roomA" data-basefee="500">会議室A (仮:500円/h)</option>
+                <option value="roomB" data-basefee="400">会議室B (仮:400円/h)</option>
+            </select>
+        </div>
+
+        <div class="form-group checkbox-group">
+            <input type="checkbox" id="acCheck" onchange="calculate()">
+            <label for="acCheck" style="margin-bottom: 0;">空調（冷暖房）を使用する</label>
+        </div>
+
+        <div class="form-group" style="display: flex; gap: 10px;">
+            <div style="flex: 1;">
+                <label>開始時間</label>
+                <input type="time" id="startTime" value="09:00" onchange="calculate()">
+            </div>
+            <div style="flex: 1;">
+                <label>終了時間</label>
+                <input type="time" id="endTime" value="12:00" onchange="calculate()">
+            </div>
+        </div>
+
+        <div class="result-box">
+            <h2>予定合計金額（一金）</h2>
+            <div class="total-price">￥<span id="totalDisplay">0</span>-</div>
+            <p style="font-size: 0.8rem; color: #666; margin-top: 10px;" id="calcDetail">内訳: (基本料金 + 空調費) × 使用時間</p>
+        </div>
+
+        <button type="button" class="btn-print" onclick="window.print()">この内容でPDF保存／印刷する</button>
+    </form>
+</div>
+
+<script>
+    // 今日の日付を初期セット
+    document.getElementById('applyDate').valueAsDate = new Date();
+
+    function calculate() {
+        const userType = document.getElementById('userType').value;
+        const facilitySelect = document.getElementById('facility');
+        const selectedFacility = facilitySelect.options[facilitySelect.selectedIndex];
+        const facilityValue = selectedFacility.value;
+        const baseFee = parseInt(selectedFacility.getAttribute('data-basefee'));
+        const acCheck = document.getElementById('acCheck').checked;
+        
+        const startTime = document.getElementById('startTime').value;
+        const endTime = document.getElementById('endTime').value;
+
+        // アラートの表示制御
+        document.getElementById('stampAlert').style.display = (userType === '加盟団体') ? 'block' : 'none';
+        document.getElementById('youthAlert').style.display = (userType === '高校生以下') ? 'block' : 'none';
+
+        // 空調費用の設定 
+        let acFee = 0;
+        if (acCheck) {
+            if (facilityValue === 'roomAB') acFee = 550;
+            else if (facilityValue === 'roomA') acFee = 330;
+            else if (facilityValue === 'roomB') acFee = 220;
+            // 体育館の空調は現状の申請書に単価記載がないため0円としています
+        }
+
+        // 時間計算
+        if(startTime && endTime) {
+            const start = new Date(`2000-01-01T${startTime}:00`);
+            const end = new Date(`2000-01-01T${endTime}:00`);
+            let diffHours = (end - start) / (1000 * 60 * 60);
+            
+            if (diffHours > 0) {
+                const total = (baseFee + acFee) * diffHours;
+                document.getElementById('totalDisplay').innerText = total.toLocaleString();
+                document.getElementById('calcDetail').innerText = 
+                    `内訳: (基本料金￥${baseFee} + 空調￥${acFee}) × ${diffHours}時間`;
+            } else {
+                document.getElementById('totalDisplay').innerText = "0";
+                document.getElementById('calcDetail').innerText = "終了時間は開始時間より後に設定してください。";
+            }
+        }
+    }
+
+    // 初期表示時に一回計算を回す
+    calculate();
+</script>
+
+</body>
+</html>
