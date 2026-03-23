@@ -3,226 +3,458 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>沖縄県スポーツ協会 施設使用申請</title>
+    <title>施設使用申請書 - 公益財団法人沖縄県スポーツ協会</title>
     <style>
-        /* アプリ感覚のモダンなデザイン */
+        /* =========================================
+           画面用スタイル（アプリ風UI）
+           ========================================= */
         :root {
-            --primary-color: #0056b3;
-            --bg-color: #f4f7f6;
-            --box-bg: #ffffff;
-            --text-color: #333;
+            --primary: #004098;
+            --bg: #f0f4f8;
+            --border: #ccc;
         }
         body {
-            font-family: 'Helvetica Neue', Arial, 'Hiragino Kaku Gothic ProN', 'Hiragino Sans', Meiryo, sans-serif;
-            background-color: var(--bg-color);
-            color: var(--text-color);
-            margin: 0;
-            padding: 20px;
+            font-family: 'Helvetica Neue', Arial, 'Hiragino Kaku Gothic ProN', Meiryo, sans-serif;
+            background: var(--bg);
+            color: #333;
+            margin: 0; padding: 20px;
         }
-        .container {
-            max-width: 800px;
-            margin: 0 auto;
-            background: var(--box-bg);
-            padding: 30px;
-            border-radius: 12px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+        .app-container {
+            max-width: 800px; margin: 0 auto; background: #fff;
+            padding: 30px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1);
         }
-        h1 {
-            text-align: center;
-            color: var(--primary-color);
-            font-size: 1.5rem;
-            border-bottom: 2px solid var(--primary-color);
-            padding-bottom: 10px;
-            margin-bottom: 30px;
+        h1 { text-align: center; color: var(--primary); font-size: 1.5rem; border-bottom: 2px solid var(--primary); padding-bottom: 10px; }
+        .form-section { background: #f9fbfd; padding: 15px; border-radius: 8px; margin-bottom: 20px; border: 1px solid #e1e8ed; }
+        .form-section h2 { margin-top: 0; font-size: 1.1rem; color: var(--primary); }
+        .form-group { margin-bottom: 15px; }
+        label { display: block; font-weight: bold; margin-bottom: 5px; font-size: 0.9rem; }
+        input[type="text"], input[type="tel"], input[type="number"], input[type="date"], input[type="time"], select {
+            width: 100%; padding: 10px; border: 1px solid var(--border); border-radius: 4px; box-sizing: border-box; font-size: 1rem;
         }
-        .form-group {
-            margin-bottom: 20px;
-        }
-        label {
-            display: block;
-            font-weight: bold;
-            margin-bottom: 8px;
-            font-size: 0.95rem;
-        }
-        input[type="text"], input[type="time"], input[type="date"], select {
-            width: 100%;
-            padding: 12px;
-            border: 1px solid #ccc;
-            border-radius: 6px;
-            box-sizing: border-box;
-            font-size: 1rem;
-        }
-        .checkbox-group {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            padding: 10px 0;
-        }
-        .checkbox-group input {
-            transform: scale(1.5);
-            margin-right: 5px;
-        }
-        .alert-message {
-            color: #d9534f;
-            font-size: 0.9rem;
-            font-weight: bold;
-            margin-top: 5px;
-            display: none;
-        }
-        .result-box {
-            background-color: #e9ecef;
-            padding: 20px;
-            border-radius: 8px;
-            margin-top: 30px;
-            text-align: center;
-        }
-        .result-box h2 {
-            margin: 0 0 10px 0;
-            font-size: 1.2rem;
-        }
-        .total-price {
-            font-size: 2rem;
-            font-weight: bold;
-            color: var(--primary-color);
-        }
+        .checkbox-group { display: flex; flex-wrap: wrap; gap: 15px; }
+        .checkbox-label { display: flex; align-items: center; font-weight: normal; cursor: pointer; }
+        .checkbox-label input { margin-right: 5px; transform: scale(1.2); }
+        .alert { color: #d9534f; font-weight: bold; font-size: 0.85rem; margin-top: 5px; display: none; }
+        .result-box { background: #e8f4fd; padding: 20px; border-radius: 8px; text-align: center; margin-top: 20px; border: 2px solid var(--primary); }
+        .total-price { font-size: 2.5rem; font-weight: bold; color: var(--primary); margin: 10px 0; }
         .btn-print {
-            display: block;
-            width: 100%;
-            padding: 15px;
-            background-color: var(--primary-color);
-            color: white;
-            text-align: center;
-            border: none;
-            border-radius: 8px;
-            font-size: 1.2rem;
-            font-weight: bold;
-            cursor: pointer;
-            margin-top: 20px;
-            transition: background-color 0.3s;
+            width: 100%; padding: 15px; background: var(--primary); color: #fff; font-size: 1.2rem; font-weight: bold;
+            border: none; border-radius: 8px; cursor: pointer; margin-top: 20px; transition: 0.3s;
         }
-        .btn-print:hover {
-            background-color: #004494;
-        }
+        .btn-print:hover { background: #002b66; }
 
-        /* 印刷（PDF出力）時の設定 */
+        /* =========================================
+           印刷・PDF出力用スタイル（公的書類フォーマット）
+           ========================================= */
+        .print-only { display: none; }
         @media print {
-            body { background-color: white; padding: 0; }
-            .container { box-shadow: none; padding: 0; }
-            .btn-print { display: none; } /* 印刷ボタンは消す */
-            input, select { border: none; border-bottom: 1px solid #000; border-radius: 0; padding: 5px; appearance: none; }
+            body { background: #fff; padding: 0; margin: 0; font-family: 'MS Mincho', serif; }
+            .app-container { display: none; } /* 入力フォームは隠す */
+            .print-only { display: block; width: 100%; max-width: 210mm; margin: 0 auto; }
+            
+            /* ヘッダー部分 */
+            .print-header { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 20px; }
+            .print-title { text-align: center; font-size: 16pt; font-weight: bold; margin: 0; text-decoration: underline; text-underline-offset: 4px; }
+            .print-date { text-align: right; font-size: 11pt; }
+            .print-to { font-size: 12pt; margin-top: 10px; }
+            
+            /* 受付印枠 */
+            .stamp-box { border: 1px solid #000; width: 60px; height: 60px; text-align: center; font-size: 9pt; line-height: 1.2; display: inline-block; vertical-align: top;}
+            
+            /* メインテーブル */
+            table.official-table { width: 100%; border-collapse: collapse; font-size: 10pt; margin-top: 10px; border: 2px solid #000; }
+            table.official-table th, table.official-table td { border: 1px solid #000; padding: 6px; vertical-align: middle; }
+            table.official-table th { background-color: #f0f0f0; text-align: center; font-weight: normal; }
+            
+            /* 各列の幅調整 */
+            .col-title { width: 15%; text-align: center; }
+            .col-sub { width: 15%; text-align: center; }
+            
+            .price-total-box { margin-top: 20px; font-size: 14pt; font-weight: bold; display: flex; justify-content: space-between;}
+            .note-text { font-size: 9pt; margin-top: 5px; }
         }
     </style>
 </head>
 <body>
 
-<div class="container">
-    <h1>公益財団法人沖縄県スポーツ協会<br>施設使用申請書</h1>
-
-    <form id="appForm">
-        <div class="form-group">
-            <label>申請日</label>
-            <input type="date" id="applyDate" required>
-        </div>
-        <div class="form-group">
-            <label>使用団体名</label>
-            <input type="text" id="groupName" placeholder="例：一般社団法人〇〇" required>
-        </div>
-        
+<div class="app-container no-print">
+    <h1>施設使用申請フォーム</h1>
+    
+    <div class="form-section">
+        <h2>1. 申請者情報</h2>
         <div class="form-group">
             <label>区分</label>
-            <select id="userType" onchange="calculate()">
-                <option value="加盟団体">加盟（入居）団体</option>
+            <select id="i_category" onchange="updateUI()">
+                <option value="加盟（入居）団体">加盟（入居）団体</option>
                 <option value="高校生以下">高校生以下</option>
-                <option value="一般" selected>その他一般</option>
+                <option value="その他一般" selected>その他一般</option>
             </select>
-            <div id="stampAlert" class="alert-message">※加盟（入居）団体は団体印が必須です。</div>
-            <div id="youthAlert" class="alert-message">※申請・支払・当日の立会いは指導者または保護者が行ってください [cite: 22-25, 38]。</div>
+            <div id="alert_youth" class="alert">※申請や支払いに関しては、指導者や保護者の方が行ってください。なお、使用日当日も、高校生以下のみでの利用は出来ません [cite: 22, 23]。</div>
         </div>
+        <div class="form-group"><label>使用団体名</label><input type="text" id="i_orgName"></div>
+        <div class="form-group"><label>所在地</label><input type="text" id="i_address"></div>
+        <div class="form-group" style="display:flex; gap:10px;">
+            <div style="flex:1;"><label>代表者名</label><input type="text" id="i_repName"></div>
+            <div style="flex:1;"><label>申請者名</label><input type="text" id="i_appName"></div>
+        </div>
+        <div class="form-group"><label>携帯電話</label><input type="tel" id="i_phone"></div>
+    </div>
 
+    <div class="form-section">
+        <h2>2. 使用内容</h2>
+        <div class="form-group" style="display:flex; gap:10px;">
+            <div style="flex:2;"><label>使用目的</label><input type="text" id="i_purpose"></div>
+            <div style="flex:1;"><label>使用人数</label><input type="number" id="i_people" placeholder="人"></div>
+        </div>
         <div class="form-group">
-            <label>使用施設（基本料金の計算用仮設定）</label>
-            <select id="facility" onchange="calculate()">
-                <option value="gym" data-basefee="1000">体育館 (仮:1000円/h)</option>
-                <option value="roomAB" data-basefee="800">会議室AB (仮:800円/h)</option>
-                <option value="roomA" data-basefee="500">会議室A (仮:500円/h)</option>
-                <option value="roomB" data-basefee="400">会議室B (仮:400円/h)</option>
+            <label>使用施設</label>
+            <select id="i_facility" onchange="updateUI()">
+                <option value="体育館">体育館</option>
+                <option value="会議室AB">会議室AB</option>
+                <option value="会議室A">会議室A</option>
+                <option value="会議室B">会議室B</option>
             </select>
+            <div id="alert_room_youth" class="alert">※会議室は「高校生以下」の特別料金設定がありません（一般料金が適用されます）。</div>
         </div>
-
-        <div class="form-group checkbox-group">
-            <input type="checkbox" id="acCheck" onchange="calculate()">
-            <label for="acCheck" style="margin-bottom: 0;">空調（冷暖房）を使用する</label>
-        </div>
-
-        <div class="form-group" style="display: flex; gap: 10px;">
-            <div style="flex: 1;">
-                <label>開始時間</label>
-                <input type="time" id="startTime" value="09:00" onchange="calculate()">
-            </div>
-            <div style="flex: 1;">
-                <label>終了時間</label>
-                <input type="time" id="endTime" value="12:00" onchange="calculate()">
+        <div class="form-group">
+            <label>附帯設備</label>
+            <div class="checkbox-group">
+                <label class="checkbox-label"><input type="checkbox" id="i_eq_ac" onchange="updateUI()">空調（冷暖房）</label>
+                <label class="checkbox-label"><input type="checkbox" id="i_eq_audio">音響設備</label>
+                <label class="checkbox-label"><input type="checkbox" id="i_eq_mic">マイク <input type="number" id="i_eq_mic_num" style="width:50px; padding:2px; margin-left:5px;"> 本</label>
+                <label class="checkbox-label"><input type="checkbox" id="i_eq_podium">演台</label>
+                <label class="checkbox-label"><input type="checkbox" id="i_eq_visual">映像設備</label>
             </div>
         </div>
+    </div>
 
-        <div class="result-box">
-            <h2>予定合計金額（一金）</h2>
-            <div class="total-price">￥<span id="totalDisplay">0</span>-</div>
-            <p style="font-size: 0.8rem; color: #666; margin-top: 10px;" id="calcDetail">内訳: (基本料金 + 空調費) × 使用時間</p>
+    <div class="form-section">
+        <h2>3. 使用日時</h2>
+        <div class="form-group" style="display:flex; gap:10px; align-items:center;">
+            <input type="date" id="i_date" onchange="updateUI()">
+            <input type="time" id="i_time_start" value="09:00" onchange="updateUI()"> ～
+            <input type="time" id="i_time_end" value="17:00" onchange="updateUI()">
         </div>
+        <div class="form-group">
+            <label>備考（複数日利用や特記事項）</label>
+            <input type="text" id="i_remarks" placeholder="例：〇月〇日も同時間で利用" [cite: 10, 16]>
+        </div>
+    </div>
 
-        <button type="button" class="btn-print" onclick="window.print()">この内容でPDF保存／印刷する</button>
-    </form>
+    <div class="result-box">
+        <div style="font-size: 1.1rem; font-weight: bold;">予定合計金額（一金）</div>
+        <div class="total-price" id="ui_total">￥0</div>
+        <div id="ui_breakdown" style="font-size: 0.9rem; color: #555;">内訳がここに表示されます</div>
+    </div>
+
+    <button type="button" class="btn-print" onclick="preparePrint()">内容を確認してPDF保存／印刷</button>
+</div>
+
+<div class="print-only">
+    <div style="font-size: 10pt; margin-bottom: 5px;">（１号様式） [cite: 1]</div>
+    <div class="print-header">
+        <div style="width: 20%;"></div>
+        <div style="width: 60%;">
+            <h1 class="print-title">沖縄県体協スポーツ会館　施設使用申請書 [cite: 2]</h1>
+        </div>
+        <div style="width: 20%; text-align: right;">
+            <div class="print-date" id="p_today">令和　年　月　日 [cite: 3]</div>
+        </div>
+    </div>
+
+    <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+        <div class="print-to">
+            公益財団法人沖縄県スポーツ協会　理事長　殿 [cite: 6]<br><br>
+            下記により使用を許可くださるよう申請します。 [cite: 7]
+        </div>
+        <div style="display: flex; gap: 5px;">
+            <div class="stamp-box">受 付 印<br><br><br> [cite: 4]</div>
+            <div class="stamp-box">受 付 印<br><br><br> [cite: 5]</div>
+        </div>
+    </div>
+
+    <table class="official-table">
+        <tr>
+            <th rowspan="4" class="col-title">使用団体 [cite: 16]</th>
+            <th class="col-sub">団 体 名 [cite: 16]</th>
+            <td colspan="2" id="p_orgName"></td>
+            <td style="width: 10%; text-align: center;">㊞<br><span id="p_stamp_req" style="font-size:8pt;"></span></td>
+        </tr>
+        <tr>
+            <th class="col-sub">所 在 地 [cite: 16]</th>
+            <td colspan="3" id="p_address"></td>
+        </tr>
+        <tr>
+            <th class="col-sub">代表者名 [cite: 16]</th>
+            <td colspan="3" id="p_repName"></td>
+        </tr>
+        <tr>
+            <th class="col-sub">申 請 者 [cite: 16]</th>
+            <td id="p_appName" style="width: 35%;"></td>
+            <th style="width: 15%;">携帯電話 [cite: 16]</th>
+            <td id="p_phone"></td>
+        </tr>
+        <tr>
+            <th class="col-title">使用目的 [cite: 16]</th>
+            <td colspan="2" id="p_purpose"></td>
+            <th>使用人数 [cite: 16]</th>
+            <td id="p_people"></td>
+        </tr>
+        <tr>
+            <th class="col-title">附帯設備 [cite: 16]</th>
+            <td colspan="4">
+                【会議室】 <span id="p_eq_room"></span><br>
+                　※プロジェクターはA会議室のみ利用可　※スクリーンはAとB会議室利用可 [cite: 16]<br>
+                【体育館】 <span id="p_eq_gym"></span><br>
+                　（補足）バレー・バトミントンのネット、卓球台は貸出可。ボール・シャトル・ラケット等はご持参下さい。 [cite: 16]
+            </td>
+        </tr>
+        <tr>
+            <th class="col-title">区　　分 [cite: 16]</th>
+            <td colspan="4" id="p_category"></td>
+        </tr>
+        <tr>
+            <th class="col-title">使用施設 [cite: 16]</th>
+            <td colspan="4" id="p_facility"></td>
+        </tr>
+        <tr>
+            <th class="col-title">使用日時 [cite: 16]</th>
+            <td colspan="4">
+                <span id="p_datetime"></span><br>
+                （備考１： <span id="p_remarks"></span> ） [cite: 16]
+            </td>
+        </tr>
+        <tr>
+            <th rowspan="4" class="col-title">料金内訳 [cite: 16]</th>
+            <th class="col-sub">時 間 区 別 [cite: 16]</th>
+            <td colspan="3">＠（単価）円 × 使用時間 [cite: 16]</td>
+        </tr>
+        <tr>
+            <td id="p_time_cat_1" style="text-align: center;"></td>
+            <td colspan="3" id="p_calc_1"></td>
+        </tr>
+        <tr>
+            <td id="p_time_cat_2" style="text-align: center;"></td>
+            <td colspan="3" id="p_calc_2"></td>
+        </tr>
+        <tr>
+            <td colspan="4" style="font-size: 8pt;">
+                空調の使用料金について（１時間あたりで上記@単価に含む） [cite: 16]<br>
+                会議室AB＝５５０円、会議室A＝３３０円、会議室B＝２２０円 [cite: 16]
+            </td>
+        </tr>
+    </table>
+
+    <div class="price-total-box">
+        <div>担当印　　　　　</div>
+        <div>一　金　￥ <span id="p_total" style="display:inline-block; width:150px; border-bottom:1px solid #000; text-align:right;"></span> － [cite: 17]</div>
+    </div>
+    
+    <div id="p_alert_youth" class="note-text" style="color:red; display:none;">
+        ※申請や支払いに関しては、指導者や保護者の方が行ってください。なお、使用日当日も、高校生以下のみでの利用は出来ません。 [cite: 22, 23]
+    </div>
 </div>
 
 <script>
-    // 今日の日付を初期セット
-    document.getElementById('applyDate').valueAsDate = new Date();
-
-    function calculate() {
-        const userType = document.getElementById('userType').value;
-        const facilitySelect = document.getElementById('facility');
-        const selectedFacility = facilitySelect.options[facilitySelect.selectedIndex];
-        const facilityValue = selectedFacility.value;
-        const baseFee = parseInt(selectedFacility.getAttribute('data-basefee'));
-        const acCheck = document.getElementById('acCheck').checked;
-        
-        const startTime = document.getElementById('startTime').value;
-        const endTime = document.getElementById('endTime').value;
-
-        // アラートの表示制御
-        document.getElementById('stampAlert').style.display = (userType === '加盟団体') ? 'block' : 'none';
-        document.getElementById('youthAlert').style.display = (userType === '高校生以下') ? 'block' : 'none';
-
-        // 空調費用の設定 
-        let acFee = 0;
-        if (acCheck) {
-            if (facilityValue === 'roomAB') acFee = 550;
-            else if (facilityValue === 'roomA') acFee = 330;
-            else if (facilityValue === 'roomB') acFee = 220;
-            // 体育館の空調は現状の申請書に単価記載がないため0円としています
+    // 料金マスターデータ
+    const rates = {
+        "体育館": {
+            "高校生以下": { day: 770, night: 1100, weekend: 1100 },
+            "加盟（入居）団体": { day: 770, night: 1100, weekend: 1100 },
+            "その他一般": { day: 1100, night: 1650, weekend: 1650 }
+        },
+        "会議室AB": {
+            "加盟（入居）団体": { day: 770, night: 1100, weekend: 1100 },
+            "その他一般": { day: 1100, night: 1650, weekend: 1650 }
+        },
+        "会議室A": {
+            "加盟（入居）団体": { day: 440, night: 660, weekend: 660 },
+            "その他一般": { day: 660, night: 990, weekend: 990 }
+        },
+        "会議室B": {
+            "加盟（入居）団体": { day: 330, night: 440, weekend: 440 },
+            "その他一般": { day: 440, night: 660, weekend: 660 }
         }
+    };
+    const acRates = { "会議室AB": 550, "会議室A": 330, "会議室B": 220, "体育館": 0 };
 
-        // 時間計算
-        if(startTime && endTime) {
-            const start = new Date(`2000-01-01T${startTime}:00`);
-            const end = new Date(`2000-01-01T${endTime}:00`);
-            let diffHours = (end - start) / (1000 * 60 * 60);
-            
-            if (diffHours > 0) {
-                const total = (baseFee + acFee) * diffHours;
-                document.getElementById('totalDisplay').innerText = total.toLocaleString();
-                document.getElementById('calcDetail').innerText = 
-                    `内訳: (基本料金￥${baseFee} + 空調￥${acFee}) × ${diffHours}時間`;
-            } else {
-                document.getElementById('totalDisplay').innerText = "0";
-                document.getElementById('calcDetail').innerText = "終了時間は開始時間より後に設定してください。";
-            }
-        }
+    // 和暦変換用
+    function getReiwaDateString(dateStr) {
+        if(!dateStr) return "";
+        const d = new Date(dateStr);
+        const year = d.getFullYear();
+        const reiwaYear = year - 2018;
+        const days = ['日', '月', '火', '水', '木', '金', '土'];
+        return `令和${reiwaYear}年 ${d.getMonth()+1}月 ${d.getDate()}日 (${days[d.getDay()]})`;
     }
 
-    // 初期表示時に一回計算を回す
-    calculate();
+    // 祝日判定（簡易版：土日はtrue）
+    function isWeekendOrHoliday(dateStr) {
+        if(!dateStr) return false;
+        const d = new Date(dateStr);
+        return (d.getDay() === 0 || d.getDay() === 6);
+    }
+
+    function updateUI() {
+        const cat = document.getElementById('i_category').value;
+        const fac = document.getElementById('i_facility').value;
+        const dateVal = document.getElementById('i_date').value;
+        const startVal = document.getElementById('i_time_start').value;
+        const endVal = document.getElementById('i_time_end').value;
+        const hasAC = document.getElementById('i_eq_ac').checked;
+
+        // アラート制御
+        document.getElementById('alert_youth').style.display = (cat === '高校生以下') ? 'block' : 'none';
+        
+        // 会議室×高校生以下の場合は一般料金適用とするための処理
+        let calcCat = cat;
+        if(fac.includes('会議室') && cat === '高校生以下') {
+            document.getElementById('alert_room_youth').style.display = 'block';
+            calcCat = 'その他一般'; // 料金表に設定がないため一般扱い
+        } else {
+            document.getElementById('alert_room_youth').style.display = 'none';
+        }
+
+        // 料金計算ロジック
+        let total = 0;
+        let breakdownText = "日時を正しく入力してください";
+
+        if(dateVal && startVal && endVal) {
+            const isWeekend = isWeekendOrHoliday(dateVal);
+            const startHour = parseInt(startVal.split(':')[0]) + parseInt(startVal.split(':')[1])/60;
+            const endHour = parseInt(endVal.split(':')[0]) + parseInt(endVal.split(':')[1])/60;
+            
+            if(endHour > startHour) {
+                // 昼（9-17）と夜（17-21）の時間を切り分け
+                let dayHours = 0;
+                let nightHours = 0;
+                
+                if(isWeekend) {
+                    // 土日祝日は9-21まで一律料金
+                    dayHours = endHour - startHour; // 変数名はdayHoursだが、weekend単価を適用する
+                } else {
+                    // 平日
+                    if(startHour < 17) {
+                        dayHours = Math.min(17, endHour) - startHour;
+                    }
+                    if(endHour > 17) {
+                        nightHours = endHour - Math.max(17, startHour);
+                    }
+                }
+
+                const baseRates = rates[fac][calcCat];
+                const acFee = (fac.includes('会議室') && hasAC) ? acRates[fac] : 0;
+
+                let dayTotal = 0;
+                let nightTotal = 0;
+                let details = [];
+
+                if(isWeekend && dayHours > 0) {
+                    const unitPrice = baseRates.weekend + acFee;
+                    dayTotal = unitPrice * dayHours;
+                    details.push(`土日祝 ＠${unitPrice}円 × ${dayHours}h`);
+                } else {
+                    if(dayHours > 0) {
+                        const unitPrice = baseRates.day + acFee;
+                        dayTotal = unitPrice * dayHours;
+                        details.push(`平日/昼 ＠${unitPrice}円 × ${dayHours}h`);
+                    }
+                    if(nightHours > 0) {
+                        const unitPrice = baseRates.night + acFee;
+                        nightTotal = unitPrice * nightHours;
+                        details.push(`平日/夜 ＠${unitPrice}円 × ${nightHours}h`);
+                    }
+                }
+
+                total = dayTotal + nightTotal;
+                breakdownText = details.join(' ＋ ');
+            }
+        }
+
+        document.getElementById('ui_total').innerText = '￥' + total.toLocaleString();
+        document.getElementById('ui_breakdown').innerText = breakdownText;
+        return { total, calcCat };
+    }
+
+    function preparePrint() {
+        const data = updateUI();
+        
+        // 今日の日付
+        const today = new Date();
+        document.getElementById('p_today').innerText = `申請日：令和${today.getFullYear()-2018}年 ${today.getMonth()+1}月 ${today.getDate()}日`;
+
+        // フォーム値の転記
+        document.getElementById('p_orgName').innerText = document.getElementById('i_orgName').value;
+        document.getElementById('p_address').innerText = document.getElementById('i_address').value;
+        document.getElementById('p_repName').innerText = document.getElementById('i_repName').value;
+        document.getElementById('p_appName').innerText = document.getElementById('i_appName').value;
+        document.getElementById('p_phone').innerText = document.getElementById('i_phone').value;
+        document.getElementById('p_purpose').innerText = document.getElementById('i_purpose').value;
+        document.getElementById('p_people').innerText = document.getElementById('i_people').value ? document.getElementById('i_people').value + ' 名' : '';
+        
+        const cat = document.getElementById('i_category').value;
+        document.getElementById('p_category').innerHTML = 
+            (cat==='加盟（入居）団体'?'■':'□')+'加盟（入居）団体　　' +
+            (cat==='高校生以下'?'■':'□')+'高校生以下　　' +
+            (cat==='その他一般'?'■':'□')+'その他一般';
+            
+        document.getElementById('p_stamp_req').innerText = (cat === '加盟（入居）団体') ? '※加盟団体必須' : '';
+        document.getElementById('p_alert_youth').style.display = (cat === '高校生以下') ? 'block' : 'none';
+
+        const fac = document.getElementById('i_facility').value;
+        let facText = "体 育 館　・　会 議 室（　";
+        if(fac === '体育館') facText += "ＡＢ ／ Ａ ／ Ｂ　）";
+        if(fac === '会議室AB') facText = "会 議 室（　〇ＡＢ ／ Ａ ／ Ｂ　）";
+        if(fac === '会議室A') facText = "会 議 室（　ＡＢ ／ 〇Ａ ／ Ｂ　）";
+        if(fac === '会議室B') facText = "会 議 室（　ＡＢ ／ Ａ ／ 〇Ｂ　）";
+        document.getElementById('p_facility').innerText = facText;
+
+        // 附帯設備
+        let roomEq = [];
+        if(document.getElementById('i_eq_ac').checked) roomEq.push('■空調（冷暖房）'); else roomEq.push('□空調（冷暖房）');
+        if(document.getElementById('i_eq_audio').checked) roomEq.push('■音響設備'); else roomEq.push('□音響設備');
+        if(document.getElementById('i_eq_mic').checked) roomEq.push(`■マイク(${document.getElementById('i_eq_mic_num').value}本)`); else roomEq.push('□マイク(　本)');
+        if(document.getElementById('i_eq_podium').checked) roomEq.push('■演台'); else roomEq.push('□演台');
+        if(document.getElementById('i_eq_visual').checked) roomEq.push('■映像設備'); else roomEq.push('□映像設備');
+        document.getElementById('p_eq_room').innerHTML = roomEq.join('　');
+        
+        // 日時
+        const dateVal = document.getElementById('i_date').value;
+        const startVal = document.getElementById('i_time_start').value;
+        const endVal = document.getElementById('i_time_end').value;
+        if(dateVal && startVal && endVal) {
+            const startH = parseInt(startVal.split(':')[0]);
+            const endH = parseInt(endVal.split(':')[0]);
+            document.getElementById('p_datetime').innerText = `${getReiwaDateString(dateVal)}　${startVal} ～ ${endVal} （計 ${endH - startH} 時間）`;
+        }
+        document.getElementById('p_remarks').innerText = document.getElementById('i_remarks').value;
+
+        // 料金内訳の描画（最大2行）
+        document.getElementById('p_time_cat_1').innerText = ""; document.getElementById('p_calc_1').innerText = "";
+        document.getElementById('p_time_cat_2').innerText = ""; document.getElementById('p_calc_2').innerText = "";
+
+        const breakdownText = document.getElementById('ui_breakdown').innerText;
+        const parts = breakdownText.split(' ＋ ');
+        if(parts[0] && parts[0] !== "日時を正しく入力してください") {
+            let p1 = parts[0].split(' ＠');
+            document.getElementById('p_time_cat_1').innerText = p1[0];
+            document.getElementById('p_calc_1').innerText = '＠' + p1[1] + '円';
+        }
+        if(parts[1]) {
+            let p2 = parts[1].split(' ＠');
+            document.getElementById('p_time_cat_2').innerText = p2[0];
+            document.getElementById('p_calc_2').innerText = '＠' + p2[1] + '円';
+        }
+
+        document.getElementById('p_total').innerText = data.total.toLocaleString();
+
+        // 印刷ダイアログを呼び出す
+        window.print();
+    }
+
+    // 初期化
+    document.getElementById('i_date').valueAsDate = new Date();
+    updateUI();
 </script>
 
 </body>
