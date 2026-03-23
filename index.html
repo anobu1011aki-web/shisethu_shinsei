@@ -2,63 +2,60 @@
 <html lang="ja">
 <head>
     <meta charset="UTF-8">
-    <title>施設使用申請書システム_R6最終修正版</title>
+    <title>施設使用申請書システム_最終調整版</title>
     <style>
         /* =========================================
            画面表示用（入力フォーム）
            ========================================= */
-        :root { --primary: #004098; --bg: #f8fafc; --accent: #10b981; }
+        :root { --primary: #004098; --bg: #f1f5f9; --accent: #10b981; }
         body { font-family: "Helvetica Neue", Arial, sans-serif; background: var(--bg); margin: 0; padding: 20px; color: #1e293b; }
-        .no-print-container { max-width: 900px; margin: 0 auto; background: white; padding: 30px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
+        .no-print-container { max-width: 950px; margin: 0 auto; background: white; padding: 30px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
         h1.ui-title { text-align: center; color: var(--primary); font-size: 22px; border-bottom: 2px solid var(--primary); padding-bottom: 10px; margin-top: 0; }
         
-        /* 入力グリッド */
         .input-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 20px; }
         label { display: block; font-weight: bold; margin-bottom: 5px; font-size: 14px; }
-        input, select { width: 100%; padding: 10px; border: 1px solid #cbd5e1; border-radius: 6px; box-sizing: border-box; font-size: 15px; margin-bottom: 15px; }
+        input, select { width: 100%; padding: 10px; border: 1px solid #cbd5e1; border-radius: 6px; box-sizing: border-box; font-size: 15px; margin-bottom: 12px; }
         
-        /* 附帯設備（ズレの修正） */
-        .equipment-area { background: #f1f5f9; padding: 15px; border-radius: 8px; margin-bottom: 15px; }
-        .eq-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px 20px; }
-        .eq-item { display: flex; align-items: center; font-size: 14px; cursor: pointer; }
-        .eq-item input { width: auto; margin-right: 8px; margin-bottom: 0; cursor: pointer; }
+        /* 附帯設備エリア（ご指定の配置を再現） */
+        .equipment-area { background: #f8fafc; padding: 20px; border: 1px solid #e2e8f0; border-radius: 8px; margin-bottom: 15px; }
+        .eq-section-title { font-weight: bold; border-left: 4px solid var(--primary); padding-left: 8px; margin: 10px 0; font-size: 14px; }
+        .eq-row { display: flex; flex-wrap: wrap; gap: 15px; align-items: center; margin-bottom: 10px; }
+        .eq-item { display: flex; align-items: center; font-size: 14px; white-space: nowrap; }
+        .eq-item input[type="checkbox"] { width: auto; margin-right: 5px; margin-bottom: 0; }
+        .eq-item input[type="text"], .eq-item input[type="number"] { width: 60px; padding: 4px; margin: 0 5px; display: inline-block; }
+        .eq-note { font-size: 11px; color: #64748b; margin-top: 5px; line-height: 1.4; }
 
-        /* 計算表示エリア */
         .calc-box { background: #e0f2fe; padding: 20px; border-radius: 10px; text-align: center; border: 2px solid var(--primary); margin-top: 20px; }
         .total-price { font-size: 32px; font-weight: bold; color: var(--primary); margin: 5px 0; }
-        .calc-detail-live { font-size: 14px; color: #334155; min-height: 1.5em; background: rgba(255,255,255,0.5); padding: 8px; border-radius: 4px; border: 1px dashed #94a3b8; margin-top: 10px; }
+        .calc-detail-live { font-size: 14px; color: #334155; background: white; padding: 8px; border-radius: 4px; border: 1px solid #94a3b8; margin-top: 10px; min-height: 1.5em; }
 
-        .print-btn { width: 100%; padding: 18px; background: var(--accent); color: white; border: none; border-radius: 8px; font-size: 18px; font-weight: bold; cursor: pointer; margin-top: 20px; transition: 0.2s; }
-        .print-btn:hover { background: #059669; }
+        .print-btn { width: 100%; padding: 18px; background: var(--accent); color: white; border: none; border-radius: 8px; font-size: 18px; font-weight: bold; cursor: pointer; margin-top: 20px; }
 
         /* =========================================
            印刷・PDF出力用（1号様式完全再現）
            ========================================= */
         .print-only { display: none; }
         @media print {
-            @page { size: A4; margin: 10mm 15mm; }
+            @page { size: A4; margin: 8mm 12mm; }
             .no-print-container { display: none !important; }
-            .print-only { display: block; width: 100%; color: #000 !important; font-family: "MS Mincho", "Hiragino Mincho ProN", serif; line-height: 1.3; }
-            
-            /* 文字色を黒に固定 */
+            .print-only { display: block; width: 100%; color: #000 !important; font-family: "MS Mincho", "Hiragino Mincho ProN", serif; }
             .print-only * { color: #000 !important; border-color: #000 !important; }
 
-            .p-header { display: flex; justify-content: space-between; align-items: flex-start; }
-            .p-receipt-table { border-collapse: collapse; margin-top: 5px; }
-            .p-receipt-table td { border: 1pt solid #000; width: 65px; height: 70px; text-align: center; vertical-align: top; font-size: 9pt; padding: 4px; }
+            .p-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 5px; }
+            .p-receipt-table td { border: 1pt solid #000; width: 65px; height: 70px; text-align: center; vertical-align: top; font-size: 9pt; }
 
-            .p-main-title { text-align: center; font-size: 18pt; font-weight: bold; margin: 10px 0; }
-            .p-apply-date { text-align: right; font-size: 11pt; margin-bottom: 5px; }
+            .p-main-title { text-align: center; font-size: 17pt; font-weight: bold; margin: 0; }
+            .p-apply-date { text-align: right; font-size: 11pt; margin-top: -15px; }
             
-            table.p-main-table { width: 100%; border-collapse: collapse; border: 1.5pt solid #000; table-layout: fixed; }
-            table.p-main-table th, table.p-main-table td { border: 0.5pt solid #000; padding: 6px 8px; font-size: 10.5pt; height: 30px; vertical-align: middle; }
-            table.p-main-table th { background: #fff; font-weight: normal; text-align: center; }
+            table.p-main-table { width: 100%; border-collapse: collapse; border: 1.5pt solid #000; table-layout: fixed; margin-top: 5px; }
+            table.p-main-table th, table.p-main-table td { border: 0.5pt solid #000; padding: 4px 6px; font-size: 10pt; height: 26px; vertical-align: middle; box-sizing: border-box; }
+            table.p-main-table th { font-weight: normal; text-align: center; }
 
-            .p-total-line { margin-top: 35px; text-align: center; font-size: 18pt; font-weight: bold; }
+            .p-total-line { margin-top: 20px; text-align: center; font-size: 16pt; font-weight: bold; }
             .p-total-line span { border-bottom: 1.5pt solid #000; padding: 0 60px; }
             
-            .footer-note { font-size: 8.5pt; margin-top: 10px; border: 0.5pt solid #000; padding: 8px; line-height: 1.4; }
-            .stamp-box-small { border: 0.5pt solid #000; width: 45px; height: 45px; float: right; margin-top: -10px; text-align: center; font-size: 8pt; padding-top: 2px; }
+            .footer-note { font-size: 8pt; margin-top: 5px; border: 0.5pt solid #000; padding: 4px; line-height: 1.3; }
+            .stamp-box-small { border: 0.5pt solid #000; width: 45px; height: 45px; float: right; margin-top: -5px; text-align: center; font-size: 8pt; padding-top: 2px; }
         }
     </style>
 </head>
@@ -70,7 +67,7 @@
     <div class="input-grid">
         <div class="form-col">
             <label>団体名</label>
-            <input type="text" id="in_orgName" placeholder="（例）沖縄県スポーツ協会">
+            <input type="text" id="in_orgName">
             <label>所在地</label>
             <input type="text" id="in_address">
             <label>代表者名</label>
@@ -98,33 +95,47 @@
                 <option value="会議室A">会議室 A</option>
                 <option value="会議室B">会議室 B</option>
             </select>
+            <label>使用日</label>
+            <input type="date" id="in_date" onchange="calc()">
         </div>
     </div>
 
-    <label>使用日時</label>
     <div style="display: flex; gap: 10px; align-items: center; margin-bottom: 15px;">
-        <input type="date" id="in_date" onchange="calc()">
-        <input type="time" id="in_time_s" value="09:00" onchange="calc()"> ～
-        <input type="time" id="in_time_e" value="12:00" onchange="calc()">
+        <label style="margin:0">時間：</label>
+        <input type="time" id="in_time_s" value="09:00" onchange="calc()" style="width:150px; margin:0"> ～
+        <input type="time" id="in_time_e" value="12:00" onchange="calc()" style="width:150px; margin:0">
     </div>
 
     <div class="equipment-area">
-        <label>附帯設備</label>
-        <div class="eq-grid">
-            <label class="eq-item"><input type="checkbox" id="check_ac" onchange="calc()">空調（会議室のみ有料）</label>
+        <div class="eq-section-title">【会議室】</div>
+        <div class="eq-row">
+            <label class="eq-item"><input type="checkbox" id="check_ac" onchange="calc()">空調（冷暖房）</label>
             <label class="eq-item"><input type="checkbox" id="check_audio">音響設備</label>
-            <label class="eq-item"><input type="checkbox" id="check_mic">マイク</label>
-            <label class="eq-item"><input type="checkbox" id="check_proj">映像設備</label>
+            <label class="eq-item"><input type="checkbox" id="check_mic">マイク（<input type="number" id="in_mic_count" value="0" style="width:40px; margin:0">本）</label>
+            <label class="eq-item"><input type="checkbox" id="check_entai">演台</label>
+            <label class="eq-item"><input type="checkbox" id="check_proj">映像設備※</label>
+        </div>
+        <div class="eq-row">
+            <label class="eq-item">その他（<input type="text" id="in_eq_other_conf" style="width:250px; margin:0">）</label>
+            <div class="eq-note">※プロジェクターはA会議室のみ利用可、スクリーンはAとB会議室利用可</div>
+        </div>
+
+        <div class="eq-section-title">【体育館】</div>
+        <div class="eq-row">
             <label class="eq-item"><input type="checkbox" id="check_vball">バレーボール用具</label>
             <label class="eq-item"><input type="checkbox" id="check_bad">バドミントン用具</label>
             <label class="eq-item"><input type="checkbox" id="check_tabletennis">卓球用具</label>
         </div>
+        <div class="eq-row">
+            <label class="eq-item">その他（<input type="text" id="in_eq_other_gym" style="width:450px; margin:0">）</label>
+        </div>
+        <div class="eq-note">（補足）バレー・バドミントンのネット、卓球台は貸出可。ボール・シャトル・ラケット等はご持参下さい。</div>
     </div>
 
     <div class="calc-box">
         <div style="font-weight: bold; font-size: 14px;">合計請求予定額</div>
         <div class="total-price" id="ui_total">￥0</div>
-        <div id="ui_detail" class="calc-detail-live">計算式がここに表示されます</div>
+        <div id="ui_detail" class="calc-detail-live">計算式</div>
     </div>
 
     <button class="print-btn" onclick="goPrint()">内容を確定してPDF出力（1号様式）</button>
@@ -132,64 +143,53 @@
 
 <div class="print-only">
     <div class="p-header">
-        <div style="font-size: 10pt;">（１号様式）</div>
-        <table class="p-receipt-table">
-            <tr><td>受 付 印</td></tr>
-        </table>
+        <div style="font-size: 9pt;">（１号様式）</div>
+        <table class="p-receipt-table"><tr><td>受 付 印</td></tr></table>
     </div>
 
     <div class="p-main-title">沖縄県体協スポーツ会館　施設使用申請書</div>
-    <div class="p-apply-date" id="p_today">申請日：令和　　年　　月　　日</div>
-    <div style="font-size: 11pt; margin-bottom: 5px;">公益財団法人沖縄県スポーツ協会　理事長　殿</div>
-    <div style="font-size: 10pt; margin-bottom: 10px;">下記により使用を許可くださるよう申請します。 ※太枠のみ記入願います。</div>
+    <div class="p-apply-date" id="p_today">申請日：令和　年　月　日</div>
+    <div style="font-size: 10.5pt; margin-bottom: 5px;">公益財団法人沖縄県スポーツ協会　理事長　殿</div>
+    <div style="font-size: 9.5pt; margin-bottom: 5px;">下記により使用を許可くださるよう申請します。 ※太枠のみ記入願います。</div>
 
     <div style="text-align: center; font-weight: bold; margin-bottom: 2px;">記</div>
 
     <table class="p-main-table">
         <tr>
-            <th rowspan="4" style="width: 40px; border: 1.5pt solid #000;">使<br>用<br>団<br>体</th>
+            <th rowspan="4" style="width: 35px; border: 1.5pt solid #000;">使<br>用<br>団<br>体</th>
             <th style="width: 80px; border-top: 1.5pt solid #000;">団 体 名</th>
-            <td colspan="3" id="p_orgName" style="border-top: 1.5pt solid #000; font-size: 12pt; font-weight: bold;"></td>
+            <td colspan="3" id="p_orgName" style="border-top: 1.5pt solid #000; font-size: 11pt; font-weight: bold;"></td>
             <td rowspan="4" style="width: 100px; border: 1.5pt solid #000; text-align: center; vertical-align: top; font-size: 8pt;">
                 団体印※<br><br>
-                <div style="border: 1pt dashed #999; width: 50px; height: 50px; border-radius: 50%; display: inline-block; line-height: 50px; color: #999; font-size: 16pt;">印</div><br>
+                <div style="border: 0.5pt dashed #ccc; width: 45px; height: 45px; border-radius: 50%; display: inline-block; line-height: 45px; color: #ccc; font-size: 14pt;">印</div><br>
                 <span id="p_stamp_note" style="font-size: 7pt;"></span>
             </td>
         </tr>
+        <tr><th>所 在 地</th><td colspan="3" id="p_address"></td></tr>
+        <tr><th>代表者名</th><td colspan="3" id="p_repName"></td></tr>
         <tr>
-            <th>所 在 地</th>
-            <td colspan="3" id="p_address"></td>
+            <th style="border-bottom: 1.5pt solid #000;">申 請 者</th><td id="p_appName" style="border-bottom: 1.5pt solid #000;"></td>
+            <th style="width: 65px; border-bottom: 1.5pt solid #000;">携帯電話</th><td id="p_phone" style="border-bottom: 1.5pt solid #000;"></td>
         </tr>
         <tr>
-            <th>代表者名</th>
-            <td colspan="3" id="p_repName"></td>
+            <th colspan="2" style="border: 1.5pt solid #000;">使用目的</th><td colspan="2" id="p_purpose" style="border: 1.5pt solid #000;"></td>
+            <th style="border: 1.5pt solid #000;">使用人数</th><td id="p_people" style="border: 1.5pt solid #000; text-align: center;"></td>
         </tr>
         <tr>
-            <th style="border-bottom: 1.5pt solid #000;">申 請 者</th>
-            <td id="p_appName" style="border-bottom: 1.5pt solid #000;"></td>
-            <th style="width: 65px; border-bottom: 1.5pt solid #000;">携帯電話</th>
-            <td id="p_phone" style="border-bottom: 1.5pt solid #000;"></td>
-        </tr>
-        <tr>
-            <th colspan="2" style="border: 1.5pt solid #000;">使用目的</th>
-            <td colspan="2" id="p_purpose" style="border: 1.5pt solid #000;"></td>
-            <th style="border: 1.5pt solid #000;">使用人数</th>
-            <td id="p_people" style="border: 1.5pt solid #000; text-align: center;"></td>
-        </tr>
-        <tr>
-            <th colspan="2" style="height: 90px; border: 1.5pt solid #000;">附帯設備</th>
-            <td colspan="4" style="border: 1.5pt solid #000; font-size: 8.5pt; vertical-align: top; padding: 6px;">
+            <th colspan="2" style="height: 100px; border: 1.5pt solid #000;">附帯設備</th>
+            <td colspan="4" style="border: 1.5pt solid #000; font-size: 8pt; vertical-align: top; padding: 5px;">
                 【会議室】<br>
-                <span id="eq_ac">□</span>空調（冷暖房）　<span id="eq_audio">□</span>音響設備　<span id="eq_mic">□</span>マイク　<span id="eq_proj">□</span>映像設備※<br>
-                <span style="font-size: 7pt; display: block; margin: 2px 0;">※プロジェクターはA会議室のみ利用可　※スクリーンはAとB会議室利用可</span>
-                【体育館】<br>
+                <span id="eq_ac">□</span>空調（冷暖房）　<span id="eq_audio">□</span>音響設備　<span id="eq_mic">□</span>マイク（<span id="p_mic_count">　</span>本）　<span id="eq_entai">□</span>演台　<span id="eq_proj">□</span>映像設備※<br>
+                <span id="eq_other_conf">□</span>その他（<span id="p_eq_other_conf">　　　　</span>） <span style="font-size: 7pt; margin-left:20px;">※プロジェクターはA会議室のみ利用可</span><br>
+                【体育館】 <span style="font-size: 7pt; margin-left:145px;">※スクリーンはAとB会議室利用可</span><br>
                 <span id="eq_vball">□</span>バレーボール用具　<span id="eq_bad">□</span>バドミントン用具　<span id="eq_tabletennis">□</span>卓球用具<br>
+                <span id="eq_other_gym">□</span>その他（<span id="p_eq_other_gym">　　　　</span>）<br>
                 <span style="font-size: 7pt;">（補足）バレー・バドミントンのネット、卓球台は貸出可。ボール・シャトル・ラケット等はご持参下さい。</span>
             </td>
         </tr>
         <tr>
             <th colspan="2" style="border: 1.5pt solid #000;">区　　分</th>
-            <td colspan="4" style="border: 1.5pt solid #000;">
+            <td colspan="4" style="border: 1.5pt solid #000; font-size: 9.5pt;">
                 <span id="cat_1">□</span>加盟（入居）団体　　<span id="cat_2">□</span>高校生以下　　<span id="cat_3">□</span>その他一般
             </td>
         </tr>
@@ -200,45 +200,27 @@
             </td>
         </tr>
         <tr>
-            <th colspan="2" style="height: 70px; border: 1.5pt solid #000;">使用日時</th>
+            <th colspan="2" style="height: 65px; border: 1.5pt solid #000;">使用日時</th>
             <td colspan="4" style="border: 1.5pt solid #000; vertical-align: top;">
-                <div id="p_datetime_main" style="font-weight: bold; margin-bottom: 5px;"></div>
-                <div style="font-size: 8pt; color: #000;">
-                    （備考１：）<br>（備考２：）<br>（備考３：）
-                </div>
+                <div id="p_datetime_main" style="font-weight: bold; margin-bottom: 2px; font-size: 10.5pt;"></div>
+                <div style="font-size: 8pt; line-height: 1.2;">（備考１：）<br>（備考２：）<br>（備考３：）</div>
             </td>
         </tr>
         <tr>
-            <th rowspan="5" style="width: 40px; border: 1.5pt solid #000;">料<br>金<br>内<br>訳</th>
-            <th>時間区別</th>
-            <td colspan="4" style="text-align: center;">＠（単価）円 × 使用時間</td>
+            <th rowspan="5" style="width: 35px; border: 1.5pt solid #000;">料<br>金<br>内<br>訳</th>
+            <th>時間区別</th><td colspan="4" style="text-align: center;">＠（単価）円 × 使用時間</td>
         </tr>
-        <tr>
-            <th>平日/昼</th>
-            <td colspan="4" id="row1_val">＠　　　円 × 　　時間 ＝ 　　　円</td>
-        </tr>
-        <tr>
-            <th>平日/昼</th>
-            <td colspan="4">＠　　　円 × 　　時間 ＝ 　　　円</td>
-        </tr>
-        <tr>
-            <th>平日/夜・休日</th>
-            <td colspan="4" id="row3_val">＠　　　円 × 　　時間 ＝ 　　　円</td>
-        </tr>
-        <tr>
-            <th>平日/夜・休日</th>
-            <td colspan="4">＠　　　円 × 　　時間 ＝ 　　　円</td>
-        </tr>
+        <tr><th>平日/昼</th><td colspan="4" id="row1_val">＠　　　円 × 　　時間 ＝ 　　　円</td></tr>
+        <tr><th>平日/昼</th><td colspan="4">＠　　　円 × 　　時間 ＝ 　　　円</td></tr>
+        <tr><th>平日/夜・休日</th><td colspan="4" id="row3_val">＠　　　円 × 　　時間 ＝ 　　　円</td></tr>
+        <tr><th>平日/夜・休日</th><td colspan="4">＠　　　円 × 　　時間 ＝ 　　　円</td></tr>
     </table>
 
     <div class="footer-note">
         空調の使用料金について（１時間あたりで上記単価に含む）： 会議室AB=550円、会議室A=330円、会議室B=220円
     </div>
 
-    <div class="p-total-line">
-        一　金　￥ <span id="p_total_sum"></span> －
-    </div>
-    
+    <div class="p-total-line">一　金　￥ <span id="p_total_sum"></span> －</div>
     <div class="stamp-box-small">担当</div>
 </div>
 
@@ -251,10 +233,7 @@
     };
     const AC = { "会議室AB": 550, "会議室A": 330, "会議室B": 220, "体育館": 0 };
 
-    function getWareki(date) {
-        const year = date.getFullYear();
-        return `令和 ${year - 2018}`;
-    }
+    function getWareki(date) { return `令和 ${date.getFullYear() - 2018}`; }
 
     function calc() {
         const fac = document.getElementById('in_facility').value;
@@ -266,9 +245,7 @@
 
         let targetCat = (fac.includes("会議室") && cat === "高校生以下") ? "その他一般" : cat;
         let total = 0;
-        let row1Text = "";
-        let row3Text = "";
-        let uiLog = "";
+        let r1 = "", r3 = "", log = "";
 
         if (dateStr && s && e) {
             const d = new Date(dateStr);
@@ -282,40 +259,33 @@
             if (isW) {
                 const unit = r.w + acFee;
                 total = unit * hours;
-                row3Text = `＠${unit.toLocaleString()} 円 × ${hours.toFixed(1)} 時間 ＝ ${Math.ceil(total).toLocaleString()} 円`;
-                uiLog = `【休日】 ${row3Text}`;
+                r3 = `＠${unit.toLocaleString()} 円 × ${hours.toFixed(1)} 時間 ＝ ${Math.ceil(total).toLocaleString()} 円`;
+                log = `(休日) ${r3}`;
             } else {
-                const dayH = Math.max(0, Math.min(17, he) - Math.max(hs, 0));
-                const nightH = Math.max(0, he - Math.max(hs, 17));
-                const dUnit = r.d + acFee;
-                const nUnit = r.n + acFee;
-                
-                if(dayH > 0) {
-                    row1Text = `＠${dUnit.toLocaleString()} 円 × ${dayH.toFixed(1)} 時間 ＝ ${Math.ceil(dUnit*dayH).toLocaleString()} 円`;
-                    uiLog += `(昼) ${row1Text} `;
+                const dH = Math.max(0, Math.min(17, he) - Math.max(hs, 0));
+                const nH = Math.max(0, he - Math.max(hs, 17));
+                const du = r.d + acFee, nu = r.n + acFee;
+                if(dH > 0) {
+                    r1 = `＠${du.toLocaleString()} 円 × ${dH.toFixed(1)} 時間 ＝ ${Math.ceil(du*dH).toLocaleString()} 円`;
+                    log += `(昼) ${r1} `;
                 }
-                if(nightH > 0) {
-                    row3Text = `＠${nUnit.toLocaleString()} 円 × ${nightH.toFixed(1)} 時間 ＝ ${Math.ceil(nUnit*nightH).toLocaleString()} 円`;
-                    uiLog += (uiLog ? " + " : "") + `(夜) ${row3Text}`;
+                if(nH > 0) {
+                    r3 = `＠${nu.toLocaleString()} 円 × ${nH.toFixed(1)} 時間 ＝ ${Math.ceil(nu*nH).toLocaleString()} 円`;
+                    log += (log ? "+ " : "") + `(夜) ${r3}`;
                 }
-                total = (dUnit * dayH) + (nUnit * nightH);
+                total = (du * dH) + (nu * nH);
             }
         }
-
-        const res = Math.ceil(total);
-        document.getElementById('ui_total').innerText = "￥" + res.toLocaleString();
-        document.getElementById('p_total_sum').innerText = res.toLocaleString();
-        document.getElementById('ui_detail').innerText = uiLog || "時間を入力してください";
-        
-        // 印刷用
-        document.getElementById('row1_val').innerText = row1Text || "＠　　　円 × 　　時間 ＝ 　　　円";
-        document.getElementById('row3_val').innerText = row3Text || "＠　　　円 × 　　時間 ＝ 　　　円";
+        document.getElementById('ui_total').innerText = "￥" + Math.ceil(total).toLocaleString();
+        document.getElementById('p_total_sum').innerText = Math.ceil(total).toLocaleString();
+        document.getElementById('ui_detail').innerText = log || "未入力";
+        document.getElementById('row1_val').innerText = r1 || "＠　　　円 × 　　時間 ＝ 　　　円";
+        document.getElementById('row3_val').innerText = r3 || "＠　　　円 × 　　時間 ＝ 　　　円";
     }
 
     function goPrint() {
         const today = new Date();
         document.getElementById('p_today').innerText = `申請日：${getWareki(today)} 年 ${today.getMonth()+1} 月 ${today.getDate()} 日`;
-        
         document.getElementById('p_orgName').innerText = document.getElementById('in_orgName').value;
         document.getElementById('p_address').innerText = document.getElementById('in_address').value;
         document.getElementById('p_repName').innerText = document.getElementById('in_repName').value;
@@ -331,34 +301,33 @@
         document.getElementById('p_stamp_note').innerText = (cat === "加盟（入居）団体") ? "※加盟団体必須" : "";
 
         const fac = document.getElementById('in_facility').value;
-        document.getElementById('fac_ab').style.fontWeight = (fac === "会議室AB") ? "bold" : "normal";
         document.getElementById('fac_ab').style.textDecoration = (fac === "会議室AB") ? "underline" : "none";
         document.getElementById('fac_a').style.textDecoration = (fac === "会議室A") ? "underline" : "none";
         document.getElementById('fac_b').style.textDecoration = (fac === "会議室B") ? "underline" : "none";
 
-        document.getElementById('eq_ac').innerText = document.getElementById('check_ac').checked ? "■" : "□";
-        document.getElementById('eq_audio').innerText = document.getElementById('check_audio').checked ? "■" : "□";
-        document.getElementById('eq_mic').innerText = document.getElementById('check_mic').checked ? "■" : "□";
-        document.getElementById('eq_proj').innerText = document.getElementById('check_proj').checked ? "■" : "□";
-        document.getElementById('eq_vball').innerText = document.getElementById('check_vball').checked ? "■" : "□";
-        document.getElementById('eq_bad').innerText = document.getElementById('check_bad').checked ? "■" : "□";
-        document.getElementById('eq_tabletennis').innerText = document.getElementById('check_tabletennis').checked ? "■" : "□";
+        // 附帯設備反映
+        const checks = ['ac','audio','proj','vball','bad','tabletennis','entai','mic'];
+        checks.forEach(c => {
+            const el = document.getElementById('eq_'+c);
+            if(el) el.innerText = document.getElementById('check_'+c).checked ? "■" : "□";
+        });
+        document.getElementById('p_mic_count').innerText = document.getElementById('in_mic_count').value;
+        const oConf = document.getElementById('in_eq_other_conf').value;
+        document.getElementById('eq_other_conf').innerText = oConf ? "■" : "□";
+        document.getElementById('p_eq_other_conf').innerText = oConf || "　　　　";
+        const oGym = document.getElementById('in_eq_other_gym').value;
+        document.getElementById('eq_other_gym').innerText = oGym ? "■" : "□";
+        document.getElementById('p_eq_other_gym').innerText = oGym || "　　　　";
 
         const dV = document.getElementById('in_date').value;
         if(dV) {
             const d = new Date(dV);
             const w = ['日','月','火','水','木','金','土'];
             document.getElementById('p_datetime_main').innerText = 
-                `${getWareki(d)} 年 ${d.getMonth()+1} 月 ${d.getDate()} 日 (${w[d.getDay()]}) ${document.getElementById('in_time_s').value} 時 ～ ${document.getElementById('in_time_e').value} 時`;
+                `${getWareki(d)} 年 ${d.getMonth()+1} 月 ${d.getDate()} 日 (${w[d.getDay()]}) ${document.getElementById('in_time_s').value} ～ ${document.getElementById('in_time_e').value}`;
         }
-
         window.print();
     }
-
-    window.onload = () => {
-        document.getElementById('in_date').value = new Date().toISOString().split('T')[0];
-        calc();
-    };
 </script>
 </body>
 </html>
