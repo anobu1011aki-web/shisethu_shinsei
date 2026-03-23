@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
     <meta charset="UTF-8">
-    <title>施設使用申請書システム_3日間対応版</title>
+    <title>施設使用申請書システム_個別空調版</title>
     <style>
         /* =========================================
            画面表示用（入力フォーム）
@@ -18,8 +18,10 @@
         
         /* 予約日程エリア */
         .date-entry-group { background: #fdfdfd; border: 1px solid #e2e8f0; padding: 15px; border-radius: 8px; margin-bottom: 10px; }
-        .date-row { display: flex; gap: 10px; align-items: center; }
+        .date-row { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
         .date-row input { margin-bottom: 0; }
+        .ac-check-label { font-size: 13px; display: flex; align-items: center; cursor: pointer; background: #e0f2fe; padding: 5px 10px; border-radius: 4px; }
+        .ac-check-label input { width: auto; margin-right: 5px; margin-bottom: 0; }
 
         .equipment-area { background: #f8fafc; padding: 20px; border: 1px solid #e2e8f0; border-radius: 8px; margin-bottom: 15px; }
         .eq-section-title { font-weight: bold; border-left: 4px solid var(--primary); padding-left: 8px; margin: 10px 0; font-size: 14px; }
@@ -30,6 +32,7 @@
 
         .calc-box { background: #e0f2fe; padding: 20px; border-radius: 10px; text-align: center; border: 2px solid var(--primary); margin-top: 20px; }
         .total-price { font-size: 32px; font-weight: bold; color: var(--primary); margin: 5px 0; }
+        .calc-detail-live { font-size: 13px; color: #334155; background: rgba(255,255,255,0.6); padding: 10px; border-radius: 6px; margin-top: 10px; text-align: left; line-height: 1.6; }
 
         .print-btn { width: 100%; padding: 18px; background: var(--accent); color: white; border: none; border-radius: 8px; font-size: 18px; font-weight: bold; cursor: pointer; margin-top: 20px; }
 
@@ -41,20 +44,15 @@
             @page { size: A4; margin: 8mm 12mm; }
             .no-print-container { display: none !important; }
             .print-only { display: block; width: 100%; color: #000 !important; font-family: "MS Mincho", "Hiragino Mincho ProN", serif; }
-            
             .p-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 5px; }
             .p-receipt-table td { border: 1pt solid #000; width: 65px; height: 70px; text-align: center; vertical-align: top; font-size: 9pt; }
-
-            .p-main-title { text-align: center; font-size: 18pt; font-weight: bold; margin: 10px 0; letter-spacing: 3px; }
-            .p-apply-date { text-align: right; font-size: 11pt; margin-bottom: 10px; }
-            
-            table.p-main-table { width: 100%; border-collapse: collapse; border: 1.5pt solid #000; table-layout: fixed; }
-            table.p-main-table th, table.p-main-table td { border: 0.5pt solid #000; padding: 5px 8px; font-size: 10pt; height: 32px; vertical-align: middle; box-sizing: border-box; }
-            table.p-main-table th { font-weight: normal; text-align: center; background: #fff; }
-
-            .p-total-line { margin-top: 25px; text-align: center; font-size: 18pt; font-weight: bold; }
+            .p-main-title { text-align: center; font-size: 18pt; font-weight: bold; margin: 5px 0; letter-spacing: 3px; }
+            .p-apply-date { text-align: right; font-size: 11pt; margin-bottom: 5px; }
+            table.p-main-table { width: 100%; border-collapse: collapse; border: 1.2pt solid #000; table-layout: fixed; }
+            table.p-main-table th, table.p-main-table td { border: 0.5pt solid #000; padding: 4px 8px; font-size: 10pt; height: 30px; vertical-align: middle; box-sizing: border-box; }
+            table.p-main-table th { font-weight: normal; text-align: center; }
+            .p-total-line { margin-top: 20px; text-align: center; font-size: 18pt; font-weight: bold; }
             .p-total-line span { border-bottom: 1.5pt solid #000; padding: 0 60px; }
-            
             .footer-note { font-size: 8.5pt; margin-top: 8px; border: 0.5pt solid #000; padding: 6px; line-height: 1.4; }
             .stamp-box-small { border: 0.5pt solid #000; width: 50px; height: 50px; float: right; margin-top: -5px; text-align: center; font-size: 9pt; }
         }
@@ -67,22 +65,15 @@
     
     <div class="input-grid">
         <div class="form-col">
-            <label>団体名</label>
-            <input type="text" id="in_orgName">
-            <label>所在地</label>
-            <input type="text" id="in_address">
-            <label>代表者名</label>
-            <input type="text" id="in_repName">
-            <label>申請者名</label>
-            <input type="text" id="in_appName">
-            <label>携帯電話</label>
-            <input type="tel" id="in_phone">
+            <label>団体名</label><input type="text" id="in_orgName">
+            <label>所在地</label><input type="text" id="in_address">
+            <label>代表者名</label><input type="text" id="in_repName">
+            <label>申請者名</label><input type="text" id="in_appName">
+            <label>携帯電話</label><input type="tel" id="in_phone">
         </div>
         <div class="form-col">
-            <label>使用目的</label>
-            <input type="text" id="in_purpose">
-            <label>使用人数</label>
-            <input type="number" id="in_people" value="0">
+            <label>使用目的</label><input type="text" id="in_purpose">
+            <label>使用人数</label><input type="number" id="in_people" value="0">
             <label>区分</label>
             <select id="in_category" onchange="calc()">
                 <option value="加盟（入居）団体">加盟（入居）団体</option>
@@ -103,38 +94,40 @@
     <div id="date_entries">
         <div class="date-entry-group">
             <div class="date-row">
-                <span>予約1:</span>
+                <span style="font-weight:bold; width:50px;">予約1:</span>
                 <input type="date" id="date_1" onchange="calc()" style="width:160px">
-                <input type="time" id="time_s1" value="09:00" onchange="calc()" style="width:120px"> ～
-                <input type="time" id="time_e1" value="12:00" onchange="calc()" style="width:120px">
+                <input type="time" id="time_s1" value="09:00" onchange="calc()" style="width:110px"> ～
+                <input type="time" id="time_e1" value="12:00" onchange="calc()" style="width:110px">
+                <label class="ac-check-label"><input type="checkbox" id="ac_1" onchange="calc()">空調あり</label>
             </div>
         </div>
         <div class="date-entry-group">
             <div class="date-row">
-                <span>予約2:</span>
+                <span style="font-weight:bold; width:50px;">予約2:</span>
                 <input type="date" id="date_2" onchange="calc()" style="width:160px">
-                <input type="time" id="time_s2" value="09:00" onchange="calc()" style="width:120px"> ～
-                <input type="time" id="time_e2" value="12:00" onchange="calc()" style="width:120px">
+                <input type="time" id="time_s2" value="09:00" onchange="calc()" style="width:110px"> ～
+                <input type="time" id="time_e2" value="12:00" onchange="calc()" style="width:110px">
+                <label class="ac-check-label"><input type="checkbox" id="ac_2" onchange="calc()">空調あり</label>
             </div>
         </div>
         <div class="date-entry-group">
             <div class="date-row">
-                <span>予約3:</span>
+                <span style="font-weight:bold; width:50px;">予約3:</span>
                 <input type="date" id="date_3" onchange="calc()" style="width:160px">
-                <input type="time" id="time_s3" value="09:00" onchange="calc()" style="width:120px"> ～
-                <input type="time" id="time_e3" value="12:00" onchange="calc()" style="width:120px">
+                <input type="time" id="time_s3" value="09:00" onchange="calc()" style="width:110px"> ～
+                <input type="time" id="time_e3" value="12:00" onchange="calc()" style="width:110px">
+                <label class="ac-check-label"><input type="checkbox" id="ac_3" onchange="calc()">空調あり</label>
             </div>
         </div>
     </div>
 
     <div class="equipment-area">
-        <div class="eq-section-title">附帯設備</div>
+        <div class="eq-section-title">附帯設備（備品など）</div>
         <div class="eq-row">
-            <label class="eq-item"><input type="checkbox" id="check_ac" onchange="calc()">空調（冷暖房）</label>
             <label class="eq-item"><input type="checkbox" id="check_audio">音響設備</label>
             <label class="eq-item"><input type="checkbox" id="check_mic">マイク（<input type="number" id="in_mic_count" value="0">本）</label>
             <label class="eq-item"><input type="checkbox" id="check_entai">演台</label>
-            <label class="eq-item"><input type="checkbox" id="check_proj">映像設備※</label>
+            <label class="eq-item"><input type="checkbox" id="check_proj">映像設備</label>
         </div>
         <div class="eq-row">
             <label class="eq-item">その他（<input type="text" id="in_eq_other" style="width:300px;">）</label>
@@ -142,8 +135,9 @@
     </div>
 
     <div class="calc-box">
-        <div style="font-weight: bold; font-size: 14px;">合計請求予定額（3日間合計）</div>
+        <div style="font-weight: bold; font-size: 14px;">合計請求予定額</div>
         <div class="total-price" id="ui_total">￥0</div>
+        <div id="ui_detail_log" class="calc-detail-live"></div>
     </div>
 
     <button class="print-btn" onclick="goPrint()">内容を確定してPDF出力</button>
@@ -154,71 +148,69 @@
         <div style="font-size: 9pt;">（１号様式）</div>
         <table class="p-receipt-table"><tr><td>受 付 印</td></tr></table>
     </div>
-
     <div class="p-main-title">沖縄県体協スポーツ会館　施設使用申請書</div>
     <div class="p-apply-date" id="p_today"></div>
-    <div style="font-size: 11pt; margin-bottom: 10px;">公益財団法人沖縄県スポーツ協会　理事長　殿</div>
+    <div style="font-size: 11pt; margin-bottom: 8px;">公益財団法人沖縄県スポーツ協会　理事長　殿</div>
 
     <table class="p-main-table">
         <tr>
-            <th rowspan="4" style="width: 40px; border: 1.5pt solid #000;">使<br>用<br>団<br>体</th>
-            <th style="width: 90px; border-top: 1.5pt solid #000;">団 体 名</th>
-            <td colspan="3" id="p_orgName" style="border-top: 1.5pt solid #000; font-size: 12pt; font-weight: bold;"></td>
-            <td rowspan="4" style="width: 110px; border: 1.5pt solid #000; text-align: center; vertical-align: top; font-size: 9pt;">
+            <th rowspan="4" style="width: 40px; border: 1.2pt solid #000;">使<br>用<br>団<br>体</th>
+            <th style="width: 90px;">団 体 名</th>
+            <td colspan="3" id="p_orgName" style="font-size: 11pt; font-weight: bold;"></td>
+            <td rowspan="4" style="width: 110px; border: 1.2pt solid #000; text-align: center; vertical-align: top; font-size: 9pt;">
                 団体印<br><br><br>
-                <div style="border: 1pt dashed #ccc; width: 50px; height: 50px; border-radius: 50%; display: inline-block; line-height: 50px; color: #ccc;">印</div>
+                <div style="border: 1pt dashed #ccc; width: 45px; height: 45px; border-radius: 50%; display: inline-block; line-height: 45px; color: #ccc;">印</div>
             </td>
         </tr>
         <tr><th>所 在 地</th><td colspan="3" id="p_address"></td></tr>
         <tr><th>代表者名</th><td colspan="3" id="p_repName"></td></tr>
         <tr>
-            <th style="border-bottom: 1.5pt solid #000;">申 請 者</th><td id="p_appName" style="border-bottom: 1.5pt solid #000;"></td>
-            <th style="width: 80px; border-bottom: 1.5pt solid #000;">携帯電話</th><td id="p_phone" style="border-bottom: 1.5pt solid #000;"></td>
+            <th>申 請 者</th><td id="p_appName" style="width:140px;"></td>
+            <th style="width: 70px;">携帯電話</th><td id="p_phone"></td>
         </tr>
         <tr>
-            <th colspan="2" style="border: 1.5pt solid #000;">使用目的</th><td colspan="2" id="p_purpose" style="border: 1.5pt solid #000;"></td>
-            <th style="border: 1.5pt solid #000;">使用人数</th><td id="p_people" style="border: 1.5pt solid #000; text-align: center;"></td>
+            <th colspan="2" style="border: 1.2pt solid #000;">使用目的</th><td colspan="2" id="p_purpose" style="border: 1.2pt solid #000;"></td>
+            <th style="border: 1.2pt solid #000; width: 70px;">使用人数</th><td id="p_people" style="border: 1.2pt solid #000; text-align: center;"></td>
         </tr>
         <tr>
-            <th colspan="2" style="border: 1.5pt solid #000; height: 80px;">附帯設備</th>
-            <td colspan="4" style="border: 1.5pt solid #000; font-size: 9pt; vertical-align: top; padding: 10px;">
-                <span id="eq_ac">□</span>空調　<span id="eq_audio">□</span>音響　<span id="eq_mic">□</span>マイク（<span id="p_mic_count"></span>本）　<span id="eq_entai">□</span>演台　<span id="eq_proj">□</span>映像設備　<br>
+            <th colspan="2" style="border: 1.2pt solid #000; height: 70px;">附帯設備</th>
+            <td colspan="4" style="border: 1.2pt solid #000; font-size: 9pt; vertical-align: top; padding: 8px;">
+                <span id="eq_audio">□</span>音響　<span id="eq_mic">□</span>マイク（<span id="p_mic_count"></span>本）　<span id="eq_entai">□</span>演台　<span id="eq_proj">□</span>映像設備　<br>
                 <span id="eq_other">□</span>その他（<span id="p_eq_other"></span>）
             </td>
         </tr>
         <tr>
-            <th colspan="2" style="border: 1.5pt solid #000;">区　　分</th>
-            <td colspan="4" style="border: 1.5pt solid #000;">
+            <th colspan="2" style="border: 1.2pt solid #000;">区　　分</th>
+            <td colspan="4" style="border: 1.2pt solid #000;">
                 <span id="cat_1">□</span>加盟団体　　<span id="cat_2">□</span>高校生以下　　<span id="cat_3">□</span>その他一般
             </td>
         </tr>
         <tr>
-            <th colspan="2" style="border: 1.5pt solid #000;">使用施設</th>
-            <td colspan="4" style="border: 1.5pt solid #000; font-weight: bold;">
+            <th colspan="2" style="border: 1.2pt solid #000;">使用施設</th>
+            <td colspan="4" style="border: 1.2pt solid #000; font-weight: bold;">
                 体育館　・　会議室（ <span id="fac_ab">AB</span> / <span id="fac_a">A</span> / <span id="fac_b">B</span> ）
             </td>
         </tr>
         <tr>
-            <th colspan="2" style="height: 100px; border: 1.5pt solid #000;">使用日時</th>
-            <td colspan="4" style="border: 1.5pt solid #000; vertical-align: top; padding: 8px; line-height: 1.6;">
+            <th colspan="2" style="height: 90px; border: 1.2pt solid #000;">使用日時</th>
+            <td colspan="4" style="border: 1.2pt solid #000; vertical-align: top; padding: 6px; line-height: 1.5; font-size: 9.5pt;">
                 <div id="p_date1"></div>
                 <div id="p_date2"></div>
                 <div id="p_date3"></div>
             </td>
         </tr>
         <tr>
-            <th rowspan="4" style="width: 40px; border: 1.5pt solid #000;">料<br>金<br>内<br>訳</th>
-            <th>時間区別</th><td colspan="4" style="text-align: center;">＠（単価）円 × 使用時間</td>
+            <th rowspan="4" style="width: 40px; border: 1.2pt solid #000;">料<br>金<br>内<br>訳</th>
+            <th>時間区別</th><td colspan="4" style="text-align: center;">＠（単価＋空調）円 × 使用時間</td>
         </tr>
-        <tr><th>予約１</th><td colspan="4" id="p_row1">＠　　円 × 　時間 ＝ 　　円</td></tr>
-        <tr><th>予約２</th><td colspan="4" id="p_row2">＠　　円 × 　時間 ＝ 　　円</td></tr>
-        <tr><th>予約３</th><td colspan="4" id="p_row3">＠　　円 × 　時間 ＝ 　　円</td></tr>
+        <tr><th>予約１</th><td colspan="4" id="p_row1"></td></tr>
+        <tr><th>予約２</th><td colspan="4" id="p_row2"></td></tr>
+        <tr><th>予約３</th><td colspan="4" id="p_row3"></td></tr>
     </table>
 
     <div class="footer-note">
-        【空調料金】会議室AB:550円/h、A:330円/h、B:220円/h（単価に合算されます）
+        【空調代/h】会議室AB:550円、A:330円、B:220円（利用時のみ単価に加算）
     </div>
-
     <div class="p-total-line">一　金　￥ <span id="p_total_sum"></span> －</div>
     <div class="stamp-box-small">担当</div>
 </div>
@@ -230,21 +222,21 @@
         "会議室A": { "加盟（入居）団体": {d:440, n:660, w:660}, "その他一般": {d:660, n:990, w:990} },
         "会議室B": { "加盟（入居）団体": {d:330, n:440, w:440}, "その他一般": {d:440, n:660, w:660} }
     };
-    const AC = { "会議室AB": 550, "会議室A": 330, "会議室B": 220, "体育館": 0 };
+    const AC_VALS = { "会議室AB": 550, "会議室A": 330, "会議室B": 220, "体育館": 0 };
 
     function getWareki(date) { return `令和 ${date.getFullYear() - 2018}`; }
 
     function calc() {
         const fac = document.getElementById('in_facility').value;
         const cat = document.getElementById('in_category').value;
-        const isAC = document.getElementById('check_ac').checked;
-        const acFee = isAC ? AC[fac] : 0;
         let grandTotal = 0;
+        let logHtml = "";
 
         for (let i = 1; i <= 3; i++) {
             const dateStr = document.getElementById('date_' + i).value;
             const s = document.getElementById('time_s' + i).value;
             const e = document.getElementById('time_e' + i).value;
+            const isAC = document.getElementById('ac_' + i).checked;
             let rowText = "＠　　円 × 　時間 ＝ 　　円";
 
             if (dateStr && s && e) {
@@ -256,55 +248,51 @@
                 
                 let targetCat = (fac.includes("会議室") && cat === "高校生以下") ? "その他一般" : cat;
                 const r = RATES[fac][targetCat];
-                const unit = (isW ? r.w : (hs >= 17 ? r.n : r.d)) + acFee;
-                const subTotal = unit * hours;
+                const baseUnit = (isW ? r.w : (hs >= 17 ? r.n : r.d));
+                const acFee = isAC ? AC_VALS[fac] : 0;
+                const totalUnit = baseUnit + acFee;
+                const subTotal = Math.ceil(totalUnit * hours);
                 
-                rowText = `＠${unit.toLocaleString()} 円 × ${hours.toFixed(1)} 時間 ＝ ${Math.ceil(subTotal).toLocaleString()} 円`;
+                const acMark = isAC ? "（空調込）" : "";
+                rowText = `＠${totalUnit.toLocaleString()} 円 × ${hours.toFixed(1)} 時間 ＝ ${subTotal.toLocaleString()} 円 ${acMark}`;
                 grandTotal += subTotal;
+                logHtml += `<div><strong>予約${i}:</strong> ${rowText}</div>`;
             }
             document.getElementById('p_row' + i).innerText = rowText;
         }
-        document.getElementById('ui_total').innerText = "￥" + Math.ceil(grandTotal).toLocaleString();
-        document.getElementById('p_total_sum').innerText = Math.ceil(grandTotal).toLocaleString();
+        document.getElementById('ui_total').innerText = "￥" + grandTotal.toLocaleString();
+        document.getElementById('p_total_sum').innerText = grandTotal.toLocaleString();
+        document.getElementById('ui_detail_log').innerHTML = logHtml || "日付と時間を入力してください。";
     }
 
     function goPrint() {
         const today = new Date();
         document.getElementById('p_today').innerText = `申請日：${getWareki(today)} 年 ${today.getMonth()+1} 月 ${today.getDate()} 日`;
-        
-        // 団体情報
         const fields = ['orgName','address','repName','appName','phone','purpose','people'];
         fields.forEach(f => document.getElementById('p_'+f).innerText = document.getElementById('in_'+f).value + (f==='people'?' 名':''));
-
-        // 区分・施設
         const cat = document.getElementById('in_category').value;
         document.getElementById('cat_1').innerText = (cat === "加盟（入居）団体") ? "■" : "□";
         document.getElementById('cat_2').innerText = (cat === "高校生以下") ? "■" : "□";
         document.getElementById('cat_3').innerText = (cat === "その他一般") ? "■" : "□";
-        
         const fac = document.getElementById('in_facility').value;
-        ['ab','a','b'].forEach(suffix => document.getElementById('fac_'+suffix).style.textDecoration = (fac === "会議室"+suffix.toUpperCase()) ? "underline" : "none");
-
-        // 日時(予約1-3)
+        ['ab','a','b'].forEach(s => document.getElementById('fac_'+s).style.textDecoration = (fac === "会議室"+s.toUpperCase()) ? "underline" : "none");
         for(let i=1; i<=3; i++) {
             const dV = document.getElementById('date_'+i).value;
             if(dV) {
                 const d = new Date(dV);
                 const w = ['日','月','火','水','木','金','土'];
-                document.getElementById('p_date'+i).innerText = `予約${i}: ${getWareki(d)}年${d.getMonth()+1}月${d.getDate()}日(${w[d.getDay()]}) ${document.getElementById('time_s'+i).value}～${document.getElementById('time_e'+i).value}`;
+                const acText = document.getElementById('ac_'+i).checked ? " 【空調有】" : " 【空調無】";
+                document.getElementById('p_date'+i).innerText = `予約${i}: ${getWareki(d)}年${d.getMonth()+1}月${d.getDate()}日(${w[d.getDay()]}) ${document.getElementById('time_s'+i).value}～${document.getElementById('time_e'+i).value}${acText}`;
             } else {
                 document.getElementById('p_date'+i).innerText = `予約${i}: 未設定`;
             }
         }
-
-        // 附帯設備
-        const checks = ['ac','audio','proj','entai','mic'];
-        checks.forEach(c => document.getElementById('eq_'+c).innerText = document.getElementById('check_'+c).checked ? "■" : "□");
+        ['audio','proj','entai','mic'].forEach(c => document.getElementById('eq_'+c).innerText = document.getElementById('check_'+c).checked ? "■" : "□");
         document.getElementById('p_mic_count').innerText = document.getElementById('in_mic_count').value;
         document.getElementById('p_eq_other').innerText = document.getElementById('in_eq_other').value;
-
         window.print();
     }
+    window.onload = calc;
 </script>
 </body>
 </html>
