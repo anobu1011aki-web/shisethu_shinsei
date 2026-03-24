@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
     <meta charset="UTF-8">
-    <title>施設使用申請書システム_完成版</title>
+    <title>施設使用申請書システム_完成版v2</title>
     <style>
         /* =========================================
            画面表示用（入力フォーム）
@@ -12,19 +12,12 @@
         .no-print-container { max-width: 950px; margin: 0 auto; background: white; padding: 25px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
         h1.ui-title { text-align: center; color: var(--primary); font-size: 20px; margin-bottom: 20px; border-bottom: 2px solid var(--primary); padding-bottom: 10px; }
         
-        /* 料金表のスタイル（入力画面用） */
-        .rate-table-wrapper { background: #f1f5f9; padding: 15px; border-radius: 8px; margin-bottom: 20px; }
-        .rate-table-title { font-weight: bold; font-size: 14px; margin-bottom: 8px; color: var(--primary); }
-        .rate-table { width: 100%; border-collapse: collapse; font-size: 12px; background: #fff; margin-bottom: 10px; }
-        .rate-table th, .rate-table td { border: 1px solid #cbd5e1; padding: 6px; text-align: center; vertical-align: middle; }
-        .rate-table th { background: #e2e8f0; font-weight: bold; }
-        .rate-table-ac { width: 50%; border-collapse: collapse; font-size: 12px; background: #fff; }
-        .rate-table-ac th, .rate-table-ac td { border: 1px solid #cbd5e1; padding: 6px; text-align: center; }
-        .rate-table-ac th { background: #e2e8f0; }
-
+        /* フォームレイアウト */
+        .category-box { background: #e0f2fe; padding: 15px; border-radius: 8px; margin-bottom: 20px; border-left: 5px solid #0284c7; }
+        .category-box label { color: #0369a1; font-size: 14px; margin-bottom: 8px; }
         .input-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 20px; }
         label { display: block; font-weight: bold; margin-bottom: 4px; font-size: 13px; }
-        input, select { width: 100%; padding: 8px; border: 1px solid #cbd5e1; border-radius: 6px; box-sizing: border-box; font-size: 14px; }
+        input[type="text"], input[type="tel"], input[type="number"], select { width: 100%; padding: 8px; border: 1px solid #cbd5e1; border-radius: 6px; box-sizing: border-box; font-size: 14px; }
         
         .date-entry-group { background: #fff; border: 1px solid #e2e8f0; padding: 12px; border-radius: 8px; margin-bottom: 10px; }
         .date-row { display: flex; gap: 8px; align-items: center; flex-wrap: nowrap; }
@@ -48,6 +41,16 @@
         .print-btn { width: 100%; padding: 15px; background: var(--accent); color: white; border: none; border-radius: 8px; font-size: 16px; font-weight: bold; cursor: pointer; margin-top: 15px; transition: background 0.2s;}
         .print-btn:hover { background: #059669; }
 
+        /* 新しい料金表のスタイル */
+        .rate-table-wrapper { background: #fff; border: 1px solid #cbd5e1; padding: 20px; border-radius: 8px; margin-top: 30px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
+        .rate-table-title { font-weight: bold; font-size: 15px; margin-bottom: 15px; color: var(--primary); border-bottom: 2px solid #e2e8f0; padding-bottom: 5px;}
+        .modern-table { width: 100%; border-collapse: collapse; margin-bottom: 20px; font-size: 13px; text-align: center; }
+        .modern-table th { background-color: #f1f5f9; border: 1px solid #cbd5e1; padding: 10px; font-weight: bold; color: #334155; }
+        .modern-table td { border: 1px solid #cbd5e1; padding: 10px; color: #475569; }
+        .modern-table tr:nth-child(even) td { background-color: #f8fafc; }
+        .table-section-title { font-weight: bold; margin-bottom: 8px; color: #334155; font-size: 14px; display: flex; align-items: center;}
+        .table-note { font-size: 11px; font-weight: normal; color: #64748b; margin-left: 10px; }
+
         /* =========================================
            印刷・PDF出力用（余白・バランス最適化）
            ========================================= */
@@ -59,26 +62,21 @@
             .print-only { display: block; width: 100%; color: #000; font-family: "MS Mincho", "Hiragino Mincho ProN", serif; }
             
             .p-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 15px; }
-            /* 罫線を1px(または1pt)の標準的な太さに統一 */
             .p-receipt-table td { border: 1px solid #000; width: 85px; height: 85px; text-align: center; vertical-align: top; font-size: 10pt; padding-top: 4px; }
             
             .p-main-title { text-align: center; font-size: 18pt; font-weight: bold; margin: 20px 0; letter-spacing: 2px; }
             .p-address-row { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 10px; font-size: 11pt; }
             
-            /* 表全体の罫線を1px solid #000に統一 */
             table.p-main-table { width: 100%; border-collapse: collapse; border: 1px solid #000; table-layout: fixed; }
             table.p-main-table th, table.p-main-table td { border: 1px solid #000; padding: 4px 6px; font-size: 9.5pt; height: 35px; vertical-align: middle; box-sizing: border-box; }
             table.p-main-table th { font-weight: normal; text-align: center; }
 
-            /* 団体印ボックスの修正: 完全に「印」を消し、文言を1行で */
             .stamp-org-box { width: 135px; text-align: center; vertical-align: top; padding-top: 8px; border-left: 1px solid #000; }
             
             .p-total-line { margin-top: 30px; text-align: center; font-size: 18pt; font-weight: bold; }
             .p-total-line span { border-bottom: 1px solid #000; padding: 0 70px; }
             .footer-note { font-size: 8.5pt; margin-top: 15px; border: 1px solid #000; padding: 8px; line-height: 1.4; }
             .stamp-box-small { border: 1px solid #000; width: 60px; height: 60px; float: right; margin-top: -10px; text-align: center; font-size: 10pt; line-height: 60px; }
-
-            /* 補足文言を1行に収めるためのクラス */
             .nowrap-text { white-space: nowrap; font-size: 7.5pt; letter-spacing: -0.2px; }
         }
     </style>
@@ -87,6 +85,30 @@
 
 <div class="no-print-container">
     <h1 class="ui-title">施設使用申請書 作成システム</h1>
+
+    <div class="category-box">
+        <label>① 利用区分を選択してください</label>
+        <select id="in_category" onchange="toggleCategory(); calc();" style="font-size: 16px; font-weight: bold;">
+            <option value="その他一般" selected>その他一般</option>
+            <option value="加盟（入居）団体">加盟（入居）団体</option>
+            <option value="高校生以下">高校生以下</option>
+        </select>
+        
+        <div id="affiliated_org_area" style="display: none; margin-top: 15px; background: #fff; padding: 10px; border-radius: 6px; border: 1px solid #bae6fd;">
+            <label style="color: #0f172a;">スポーツ協会 加盟団体を選択（自動で団体名に入力されます）</label>
+            <select id="in_affiliated_select" onchange="syncOrgName()">
+                <option value="">-- 団体を選択してください --</option>
+                <option value="沖縄県ハンドボール協会">沖縄県ハンドボール協会</option>
+                <option value="沖縄県陸上競技協会">沖縄県陸上競技協会</option>
+                <option value="沖縄県水泳連盟">沖縄県水泳連盟</option>
+                <option value="沖縄県バスケットボール協会">沖縄県バスケットボール協会</option>
+                <option value="沖縄県バレーボール協会">沖縄県バレーボール協会</option>
+                <option value="沖縄県サッカー協会">沖縄県サッカー協会</option>
+                <option value="沖縄県スポーツ少年団">沖縄県スポーツ少年団</option>
+                <option value="その他（手入力）">その他（直接入力する）</option>
+            </select>
+        </div>
+    </div>
 
     <div class="input-grid">
         <div class="form-col">
@@ -99,12 +121,6 @@
             <label>携帯電話</label><input type="tel" id="in_phone">
             <label>使用目的</label><input type="text" id="in_purpose">
             <label>使用人数</label><input type="number" id="in_people" value="0">
-            <label>区分</label>
-            <select id="in_category" onchange="calc()">
-                <option value="加盟（入居）団体">加盟（入居）団体</option>
-                <option value="高校生以下">高校生以下</option>
-                <option value="その他一般" selected>その他一般</option>
-            </select>
         </div>
     </div>
 
@@ -146,7 +162,6 @@
 
     <div class="equipment-area">
         <label>附帯設備</label>
-        
         <div class="eq-group-title">【会議室】</div>
         <div class="eq-row">
             <label class="eq-item"><input type="checkbox" id="check_audio">音響設備</label>
@@ -176,75 +191,81 @@
 
     <button class="print-btn" onclick="goPrint()">内容を確定してPDF出力</button>
 
-    <div class="rate-table-wrapper" style="margin-top: 30px;">
-        <div class="rate-table-title">■ 使用料（1時間あたり/税込）確認用</div>
-        <table class="rate-table">
+    <div class="rate-table-wrapper">
+        <div class="rate-table-title">■ 施設使用料（1時間あたり / 税込）</div>
+        
+        <div class="table-section-title">【体育館】</div>
+        <table class="modern-table">
             <tr>
-                <th rowspan="2" colspan="2">施設名 / 日時</th>
-                <th colspan="3">使用料</th>
-            </tr>
-            <tr>
+                <th>時間帯</th>
                 <th>高校生以下</th>
                 <th>加盟・入居団体</th>
                 <th>その他一般</th>
             </tr>
             <tr>
-                <td rowspan="3">体育館</td>
-                <td>平日 9時〜17時</td>
-                <td>770円</td><td>770円</td><td>1,100円</td>
+                <td>平日 9:00〜17:00</td>
+                <td>770円</td>
+                <td>770円</td>
+                <td>1,100円</td>
             </tr>
             <tr>
-                <td>平日 17時〜21時</td>
-                <td rowspan="2">1,100円</td><td rowspan="2">1,100円</td><td rowspan="2">1,650円</td>
-            </tr>
-            <tr>
-                <td>土日祝 9時〜21時</td>
-            </tr>
-            <tr>
-                <td rowspan="3">会議室AB</td>
-                <td>平日 9時〜17時</td>
-                <td rowspan="9" style="color:#64748b; font-size:10px;">※高校生以下は<br>「その他一般」<br>を適用</td>
-                <td>770円</td><td>1,100円</td>
-            </tr>
-            <tr>
-                <td>平日 17時〜21時</td>
-                <td rowspan="2">1,100円</td><td rowspan="2">1,650円</td>
-            </tr>
-            <tr>
-                <td>土日祝 9時〜21時</td>
-            </tr>
-            <tr>
-                <td rowspan="3">会議室A</td>
-                <td>平日 9時〜17時</td>
-                <td>440円</td><td>660円</td>
-            </tr>
-            <tr>
-                <td>平日 17時〜21時</td>
-                <td rowspan="2">660円</td><td rowspan="2">990円</td>
-            </tr>
-            <tr>
-                <td>土日祝 9時〜21時</td>
-            </tr>
-            <tr>
-                <td rowspan="3">会議室B</td>
-                <td>平日 9時〜17時</td>
-                <td>330円</td><td>440円</td>
-            </tr>
-            <tr>
-                <td>平日 17時〜21時</td>
-                <td rowspan="2">440円</td><td rowspan="2">660円</td>
-            </tr>
-            <tr>
-                <td>土日祝 9時〜21時</td>
+                <td>平日 17:00以降 ＆ 土日祝</td>
+                <td>1,100円</td>
+                <td>1,100円</td>
+                <td>1,650円</td>
             </tr>
         </table>
-        
-        <div style="font-size: 12px; margin-bottom: 5px;">空調(冷暖房)使用料 ※利用する場合は上記料金に追加されます。</div>
-        <table class="rate-table-ac">
-            <tr><th>施設名</th><th>使用料(1時間あたり)</th></tr>
-            <tr><td>会議室 A</td><td>330円</td></tr>
-            <tr><td>会議室 B</td><td>220円</td></tr>
-            <tr><td>会議室 AB</td><td>550円</td></tr>
+
+        <div class="table-section-title" style="margin-top: 25px;">【会議室】 <span class="table-note">※会議室は「高校生以下」も「その他一般」料金が適用されます。</span></div>
+        <table class="modern-table">
+            <tr>
+                <th rowspan="2" style="width: 20%;">施設名</th>
+                <th colspan="2">平日 9:00〜17:00</th>
+                <th colspan="2">平日 17:00以降 ＆ 土日祝</th>
+            </tr>
+            <tr>
+                <th>加盟・入居団体</th>
+                <th>その他一般</th>
+                <th>加盟・入居団体</th>
+                <th>その他一般</th>
+            </tr>
+            <tr>
+                <td>会議室 AB</td>
+                <td>770円</td>
+                <td>1,100円</td>
+                <td>1,100円</td>
+                <td>1,650円</td>
+            </tr>
+            <tr>
+                <td>会議室 A</td>
+                <td>440円</td>
+                <td>660円</td>
+                <td>660円</td>
+                <td>990円</td>
+            </tr>
+            <tr>
+                <td>会議室 B</td>
+                <td>330円</td>
+                <td>440円</td>
+                <td>440円</td>
+                <td>660円</td>
+            </tr>
+        </table>
+
+        <div class="table-section-title" style="margin-top: 25px;">【空調使用料】 <span class="table-note">※1時間あたり。利用する場合は上記施設料金に加算されます。</span></div>
+        <table class="modern-table" style="width: 100%;">
+            <tr>
+                <th>会議室 AB</th>
+                <th>会議室 A</th>
+                <th>会議室 B</th>
+                <th>体育館</th>
+            </tr>
+            <tr>
+                <td>550円</td>
+                <td>330円</td>
+                <td>220円</td>
+                <td>0円</td>
+            </tr>
         </table>
     </div>
 </div>
@@ -323,6 +344,30 @@
 </div>
 
 <script>
+    // 追加した処理：区分切り替え時のUI表示制御
+    function toggleCategory() {
+        const cat = document.getElementById('in_category').value;
+        const orgArea = document.getElementById('affiliated_org_area');
+        if (cat === '加盟（入居）団体') {
+            orgArea.style.display = 'block';
+        } else {
+            orgArea.style.display = 'none';
+            document.getElementById('in_affiliated_select').value = "";
+        }
+    }
+
+    // 追加した処理：プルダウンから団体名を自動入力
+    function syncOrgName() {
+        const selectVal = document.getElementById('in_affiliated_select').value;
+        const orgInput = document.getElementById('in_orgName');
+        if (selectVal !== "その他（手入力）" && selectVal !== "") {
+            orgInput.value = selectVal;
+        } else if (selectVal === "その他（手入力）") {
+            orgInput.value = "";
+            orgInput.focus();
+        }
+    }
+
     const RATES = {
         "体育館": { "高校生以下": {d:770, n:1100, w:1100}, "加盟（入居）団体": {d:770, n:1100, w:1100}, "その他一般": {d:1100, n:1650, w:1650} },
         "会議室AB": { "加盟（入居）団体": {d:770, n:1100, w:1100}, "その他一般": {d:1100, n:1650, w:1650} },
@@ -438,7 +483,11 @@
 
         window.print();
     }
-    window.onload = calc;
+    
+    window.onload = function() {
+        toggleCategory();
+        calc();
+    };
 </script>
 </body>
 </html>
