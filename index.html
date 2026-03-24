@@ -3,288 +3,216 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>施設使用申請書システム | 沖縄県体協スポーツ会館</title>
+    <title>施設使用申請システム | 沖縄県体協スポーツ会館</title>
     <style>
         /* =========================================
-           プロフェッショナル UI デザイン (Gov-Tech Style)
+           画面表示用：清潔感のある実力派デザイン
            ========================================= */
-        :root { 
-            --primary-blue: #1e3a8a;      /* 信頼感のある濃紺 */
-            --secondary-blue: #3b82f6;    /* 鮮やかなアクセント */
-            --bg-light: #f8fafc;          /* 背景色 */
-            --text-dark: #1e293b;         /* メイン文字 */
-            --text-muted: #64748b;        /* 補助文字 */
-            --accent-green: #10b981;      /* 成功・決定 */
-            --border-color: #e2e8f0;      /* 境界線 */
-            --card-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+        :root {
+            --gov-navy: #002d5e;
+            --gov-blue: #005bac;
+            --bg-gray: #f2f5f8;
+            --border: #ccd6e0;
+        }
+        body { font-family: "Helvetica Neue", Arial, "Hiragino Kaku Gothic ProN", "BIZ UDPGothic", sans-serif; background: var(--bg-gray); margin: 0; color: #333; }
+        .no-print-container { max-width: 950px; margin: 20px auto; padding: 20px; background: #fff; box-shadow: 0 4px 12px rgba(0,0,0,0.1); border-radius: 8px; }
+        
+        h1 { color: var(--gov-navy); border-bottom: 2px solid var(--gov-blue); padding-bottom: 10px; font-size: 22px; }
+        .section-h { background: #eef4f9; padding: 10px 15px; border-left: 4px solid var(--gov-blue); margin: 25px 0 15px; font-weight: bold; }
+
+        .input-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+        .f-item { margin-bottom: 12px; }
+        label { display: block; font-size: 13px; font-weight: bold; margin-bottom: 5px; color: #444; }
+        input[type="text"], input[type="tel"], input[type="number"], input[type="date"], select {
+            width: 100%; padding: 10px; border: 1px solid var(--border); border-radius: 4px; box-sizing: border-box; font-size: 15px;
         }
 
-        body { 
-            font-family: "Inter", "Hiragino Kaku Gothic ProN", "Noto Sans JP", sans-serif;
-            background: var(--bg-light); 
-            margin: 0; 
-            padding: 0; 
-            color: var(--text-dark);
-            line-height: 1.6;
-        }
-
-        /* ヘッダー */
-        .app-header { 
-            background: var(--primary-blue); 
-            color: white; 
-            padding: 40px 20px; 
-            text-align: center;
-            border-bottom: 4px solid var(--secondary-blue);
-        }
-        .app-header h1 { margin: 0; font-size: 28px; font-weight: 700; letter-spacing: 0.05em; }
-        .app-header p { margin: 10px 0 0 0; opacity: 0.8; font-size: 15px; }
-
-        .container { max-width: 1000px; margin: -30px auto 60px; padding: 0 20px; }
-
-        /* セクションカード */
-        .card { 
-            background: #ffffff; 
-            border-radius: 12px; 
-            box-shadow: var(--card-shadow); 
-            padding: 32px; 
-            margin-bottom: 24px;
-            border: 1px solid var(--border-color);
-        }
-        .section-title { 
-            font-size: 1.25rem; 
-            font-weight: 700; 
-            color: var(--primary-blue); 
-            margin-bottom: 24px; 
-            display: flex; 
-            align-items: center;
-            border-left: 5px solid var(--primary-blue);
-            padding-left: 15px;
-        }
-
-        /* フォーム要素 */
-        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 24px; }
-        .form-group { margin-bottom: 20px; }
-        label { display: block; font-weight: 600; margin-bottom: 8px; font-size: 14px; color: var(--text-dark); }
-        input, select, textarea { 
-            width: 100%; padding: 12px 16px; border: 1px solid var(--border-color); 
-            border-radius: 8px; font-size: 16px; transition: all 0.2s;
-            background: #ffffff; box-sizing: border-box;
-        }
-        input:focus, select:focus { outline: none; border-color: var(--secondary-blue); ring: 2px var(--secondary-blue); box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1); }
-
-        /* 予約枠のデザイン */
-        .entry-row { 
-            background: #f1f5f9; 
-            padding: 20px; 
-            border-radius: 12px; 
-            margin-bottom: 15px; 
-            display: grid;
-            grid-template-columns: 2fr 1.5fr 1fr 1fr auto;
-            gap: 12px;
-            align-items: end;
-        }
-        @media (max-width: 768px) { .entry-row { grid-template-columns: 1fr; } }
+        /* 予約枠 */
+        .date-row { display: grid; grid-template-columns: 1.5fr 1.2fr 1fr 0.1fr 1fr auto; gap: 10px; align-items: center; background: #fafafa; padding: 15px; border: 1px solid #eee; border-radius: 6px; margin-bottom: 10px; }
+        .ac-label { font-size: 13px; display: flex; align-items: center; cursor: pointer; color: var(--gov-blue); font-weight: bold; }
+        .ac-label input { margin-right: 5px; width: 18px; height: 18px; }
 
         /* 計算バー */
-        .sticky-calc-bar {
-            position: sticky;
-            bottom: 20px;
-            background: #ffffff;
-            border: 2px solid var(--primary-blue);
-            border-radius: 16px;
-            padding: 24px 40px;
-            box-shadow: 0 20px 25px -5px rgba(0,0,0,0.2);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            z-index: 1000;
-        }
-        .total-label { font-size: 14px; color: var(--text-muted); font-weight: bold; }
-        .total-amount { font-size: 32px; font-weight: 800; color: var(--primary-blue); }
-        .btn-print { 
-            background: var(--accent-green); color: white; border: none; padding: 16px 32px; 
-            border-radius: 8px; font-size: 18px; font-weight: 700; cursor: pointer; transition: 0.2s;
-        }
-        .btn-print:hover { background: #059669; transform: translateY(-2px); }
+        .calc-bar { position: sticky; bottom: 0; background: var(--gov-navy); color: #fff; padding: 20px; display: flex; justify-content: space-between; align-items: center; margin-top: 30px; border-radius: 0 0 8px 8px; }
+        .total-display { font-size: 28px; font-weight: bold; }
+        .btn-print { background: #28a745; color: white; border: none; padding: 12px 30px; border-radius: 4px; font-size: 18px; font-weight: bold; cursor: pointer; }
 
-        /* 印刷設定 */
+        /* =========================================
+           印刷用：1号様式 厳格再現
+           ========================================= */
         .print-only { display: none; }
         @media print {
-            .app-header, .container, .sticky-calc-bar { display: none !important; }
-            .print-only { display: block; font-family: "MS Mincho", serif; }
-            /* (印刷用スタイルは前回の完成度を維持) */
-            table { width: 100%; border-collapse: collapse; }
-            th, td { border: 1px solid #000; padding: 8px; text-align: center; }
-            .p-title { font-size: 20pt; text-align: center; margin: 30px 0; }
+            @page { size: A4; margin: 15mm; }
+            .no-print-container, .calc-bar { display: none !important; }
+            .print-only { display: block; font-family: "MS Mincho", "Hiragino Mincho ProN", serif; line-height: 1.2; }
+            
+            .p-header { display: flex; justify-content: space-between; margin-bottom: 10px; }
+            .p-stamp { border: 1px solid #000; width: 80px; height: 80px; text-align: center; font-size: 9pt; }
+            .p-main-title { text-align: center; font-size: 18pt; font-weight: bold; text-decoration: underline; margin: 10px 0 20px; }
+            
+            table.p-table { width: 100%; border-collapse: collapse; margin-top: 10px; table-layout: fixed; }
+            table.p-table th, table.p-table td { border: 1px solid #000; height: 35px; padding: 4px 8px; font-size: 10.5pt; }
+            table.p-table th { font-weight: normal; background: #f9f9f9; }
+            
+            .p-total-box { margin-top: 30px; text-align: center; font-size: 16pt; font-weight: bold; }
+            .p-total-box span { border-bottom: 1px solid #000; padding: 0 50px; }
+            .p-footer-note { font-size: 9pt; border: 1px solid #000; padding: 5px; margin-top: 10px; }
         }
     </style>
 </head>
 <body>
 
-<header class="app-header">
-    <h1>沖縄県体協スポーツ会館 使用申請システム</h1>
-    <p>公的施設の利用予約をスムーズに。内容を入力後、印刷用PDFが出力可能です。</p>
-</header>
+<div class="no-print-container">
+    <h1>施設使用申請システム</h1>
 
-<main class="container">
-    <div class="card">
-        <h2 class="section-title">利用区分の設定</h2>
-        <div class="form-group">
-            <label>利用カテゴリー</label>
-            <select id="in_category" onchange="toggleAffiliated(); calc();" style="font-weight:bold; color:var(--primary-blue);">
-                <option value="その他一般">その他一般（標準料金）</option>
-                <option value="加盟（入居）団体">沖縄県スポーツ協会 加盟・入居団体（減額適用）</option>
-                <option value="高校生以下">高校生以下（体育館のみ減額適用）</option>
-            </select>
-        </div>
-        <div id="org_select_area" style="display:none; margin-top:15px; padding:15px; background:#eff6ff; border-radius:8px;">
-            <label>団体名を選択</label>
-            <select id="in_org_list" onchange="syncOrgName()">
-                <option value="">-- 選択してください --</option>
-                <option value="沖縄県サッカー協会">沖縄県サッカー協会</option>
-                <option value="沖縄県野球連盟">沖縄県野球連盟</option>
-                <option value="沖縄県バスケットボール協会">沖縄県バスケットボール協会</option>
-                <option value="その他">その他（直接入力）</option>
-            </select>
-        </div>
+    <div class="section-h">1. 利用区分</div>
+    <select id="in_category" onchange="calc()">
+        <option value="その他一般">その他一般</option>
+        <option value="加盟（入居）団体">加盟（入居）団体</option>
+        <option value="高校生以下">高校生以下</option>
+    </select>
+
+    <div class="section-h">2. 申請者情報</div>
+    <div class="input-grid">
+        <div class="f-item"><label>団体名</label><input type="text" id="in_orgName"></div>
+        <div class="f-item"><label>代表者名</label><input type="text" id="in_repName"></div>
+        <div class="f-item"><label>申請者名</label><input type="text" id="in_appName"></div>
+        <div class="f-item"><label>携帯電話</label><input type="tel" id="in_phone"></div>
+        <div class="f-item"><label>所在地</label><input type="text" id="in_address" style="grid-column: span 2;"></div>
+        <div class="f-item"><label>使用目的</label><input type="text" id="in_purpose"></div>
+        <div class="f-item"><label>使用人数</label><input type="number" id="in_people" value="0"></div>
     </div>
 
-    <div class="card">
-        <h2 class="section-title">申請者情報</h2>
-        <div class="grid">
-            <div class="form-group"><label>団体名</label><input type="text" id="in_orgName" placeholder="例：沖縄県〇〇協会"></div>
-            <div class="form-group"><label>代表者名</label><input type="text" id="in_repName" placeholder="例：沖縄 太郎"></div>
-            <div class="form-group"><label>申請者（担当者）氏名</label><input type="text" id="in_appName" placeholder="例：スポーツ 花子"></div>
-            <div class="form-group"><label>連絡先（携帯電話）</label><input type="tel" id="in_phone" placeholder="090-0000-0000"></div>
+    <div class="section-h">3. 使用日時・施設</div>
+    <div id="entries">
         </div>
-    </div>
+</div>
 
-    <div class="card">
-        <h2 class="section-title">使用日時・施設</h2>
-        <div id="entries_container">
-            </div>
-        <p style="font-size: 13px; color: var(--text-muted);">※空調代は、利用時間（1時間単位・端数切り上げ）に応じて加算されます。</p>
-    </div>
-
-    <div class="sticky-calc-bar">
-        <div>
-            <div class="total-label">お支払い合計額</div>
-            <div class="total-amount" id="ui_total">¥ 0</div>
-        </div>
-        <button class="btn-print" onclick="window.print()">
-            申請書を生成（印刷・PDF）
-        </button>
-    </div>
-</main>
+<div class="calc-bar">
+    <div>合計金額（税込）： <span class="total-display" id="ui_total">¥ 0</span></div>
+    <button class="btn-print" onclick="window.print()">申請書(PDF)を作成する</button>
+</div>
 
 <div class="print-only">
-    <div class="p-title">施設使用申請書</div>
-    <table>
-        <tr><th width="150">団体名</th><td id="p_orgName" colspan="3"></td></tr>
-        <tr><th>申請者</th><td id="p_appName"></td><th>連絡先</th><td id="p_phone"></td></tr>
-        <tr><th>使用目的</th><td id="p_purpose" colspan="3"></td></tr>
+    <div class="p-header">
+        <div>（１号様式）</div>
+        <div class="p-stamp">受 付 印</div>
+    </div>
+    <div class="p-main-title">沖縄県体協スポーツ会館　施設使用申請書</div>
+    <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
+        <div>公益財団法人沖縄県スポーツ協会　理事長　殿</div>
+        <div id="p_today"></div>
+    </div>
+
+    <table class="p-table">
         <tr>
-            <th>使用日時</th>
-            <td colspan="3" id="p_datetime_list" style="text-align:left; padding:20px; line-height:2;"></td>
+            <th rowspan="4" width="30">使<br>用<br>団<br>体</th>
+            <th width="80">団体名</th><td colspan="3" id="p_orgName" style="font-weight:bold;"></td>
+            <td rowspan="4" width="100" style="text-align:center; vertical-align:top; font-size:9pt;">団体印<br>(加盟団体必須)</td>
+        </tr>
+        <tr><th>所在地</th><td colspan="3" id="p_address"></td></tr>
+        <tr><th>代表者名</th><td colspan="3" id="p_repName"></td></tr>
+        <tr><th>申請者</th><td id="p_appName"></td><th width="50">携帯</th><td id="p_phone"></td></tr>
+        <tr><th colspan="2">使用目的</th><td colspan="2" id="p_purpose"></td><th>人数</th><td id="p_people" style="text-align:center;"></td></tr>
+        <tr>
+            <th colspan="2">区分</th>
+            <td colspan="4" id="p_category_check"></td>
+        </tr>
+        <tr>
+            <th colspan="2" style="height:100px;">使用日時<br>・施設</th>
+            <td colspan="4" id="p_datetime_list" style="vertical-align:top; line-height:1.6;"></td>
         </tr>
     </table>
-    <h2 style="text-align:right; margin-top:40px;">合計金額：<span id="p_total"></span>円</h2>
+    
+    <div class="p-total-box">一 金 ￥ <span id="p_total_sum"></span> －</div>
+    <div class="p-footer-note">
+        ※計算内訳は当システムにより自動算出。空調利用を含む。
+    </div>
 </div>
 
 <script>
-    // 料金マスターデータ
     const RATES = {
-        "体育館": { "高校生以下": { day: 770, night: 1100 }, "加盟（入居）団体": { day: 770, night: 1100 }, "その他一般": { day: 1100, night: 1650 }, ac: 0 },
-        "会議室AB": { "加盟（入居）団体": { day: 770, night: 1100 }, "その他一般": { day: 1100, night: 1650 }, ac: 550 },
-        "会議室A": { "加盟（入居）団体": { day: 440, night: 660 }, "その他一般": { day: 660, night: 990 }, ac: 330 },
-        "会議室B": { "加盟（入居）団体": { day: 330, night: 440 }, "その他一般": { day: 440, night: 660 }, ac: 220 }
+        "体育館": { "高校生以下": {d:770, n:1100}, "加盟（入居）団体": {d:770, n:1100}, "その他一般": {d:1100, n:1650}, ac:0 },
+        "会議室AB": { "加盟（入居）団体": {d:770, n:1100}, "その他一般": {d:1100, n:1650}, ac:550 },
+        "会議室A": { "加盟（入居）団体": {d:440, n:660}, "その他一般": {d:660, n:990}, ac:330 },
+        "会議室B": { "加盟（入居）団体": {d:330, n:440}, "その他一般": {d:440, n:660}, ac:220 }
     };
 
-    // 予約枠の生成
-    function createEntries() {
-        const container = document.getElementById('entries_container');
+    function init() {
+        const container = document.getElementById('entries');
         for (let i = 1; i <= 3; i++) {
-            const row = document.createElement('div');
-            row.className = 'entry-row';
-            row.innerHTML = `
-                <div><label>施設</label><select id="fac_${i}" onchange="calc()"><option value="">選択してください</option><option value="体育館">体育館</option><option value="会議室AB">会議室 AB</option><option value="会議室A">会議室 A</option><option value="会議室B">会議室 B</option></select></div>
-                <div><label>使用日</label><input type="date" id="date_${i}" onchange="calc()"></div>
-                <div><label>開始</label><input type="time" id="start_${i}" value="09:00" onchange="calc()"></div>
-                <div><label>終了</label><input type="time" id="end_${i}" value="12:00" onchange="calc()"></div>
-                <div style="padding-bottom:12px;"><label style="display:flex; align-items:center; cursor:pointer;"><input type="checkbox" id="ac_${i}" onchange="calc()" style="width:auto; margin-right:8px;">空調</label></div>
-            `;
-            container.appendChild(row);
+            container.innerHTML += `
+                <div class="date-row">
+                    <select id="fac_${i}" onchange="calc()">
+                        <option value="">施設を選択</option>
+                        <option value="体育館">体育館</option>
+                        <option value="会議室AB">会議室 AB</option>
+                        <option value="会議室A">会議室 A</option>
+                        <option value="会議室B">会議室 B</option>
+                    </select>
+                    <input type="date" id="date_${i}" onchange="calc()">
+                    <input type="time" id="ts_${i}" value="09:00" onchange="calc()">
+                    <span>～</span>
+                    <input type="time" id="te_${i}" value="12:00" onchange="calc()">
+                    <label class="ac-label"><input type="checkbox" id="ac_${i}" onchange="calc()">空調</label>
+                </div>`;
         }
+        const now = new Date();
+        document.getElementById('p_today').innerText = `令和 ${now.getFullYear()-2018}年 ${now.getMonth()+1}月 ${now.getDate()}日`;
     }
 
-    function toggleAffiliated() {
-        const cat = document.getElementById('in_category').value;
-        document.getElementById('org_select_area').style.display = (cat === '加盟（入居）団体') ? 'block' : 'none';
-    }
-
-    function syncOrgName() {
-        const val = document.getElementById('in_org_list').value;
-        if (val && val !== 'その他') document.getElementById('in_orgName').value = val;
-    }
-
-    // ★ 計算ロジックの核心
     function calc() {
         let total = 0;
-        const category = document.getElementById('in_category').value;
+        let printDetail = "";
+        const cat = document.getElementById('in_category').value;
 
         for (let i = 1; i <= 3; i++) {
             const fac = document.getElementById(`fac_${i}`).value;
-            const dateStr = document.getElementById(`date_${i}`).value;
-            const start = document.getElementById(`start_${i}`).value;
-            const end = document.getElementById(`end_${i}`).value;
-            const useAc = document.getElementById(`ac_${i}`).checked;
+            const d = document.getElementById(`date_${i}`).value;
+            const ts = document.getElementById(`ts_${i}`).value;
+            const te = document.getElementById(`te_${i}`).value;
+            const ac = document.getElementById(`ac_${i}`).checked;
 
-            if (!fac || !dateStr) continue;
+            if (!fac || !d) continue;
 
-            const date = new Date(dateStr);
-            const isHoliday = (date.getDay() === 0 || date.getDay() === 6); // 土日を休日判定（祝日は拡張可能）
-            
             // 時間計算
-            const startH = parseInt(start.split(':')[0]);
-            const endH = parseInt(end.split(':')[0]);
-            const endM = parseInt(end.split(':')[1]);
-            let hours = endH - startH + (endM > 0 ? 1 : 0);
-            if (hours <= 0) continue;
+            const h_s = parseInt(ts.split(':')[0]);
+            const h_e = parseInt(te.split(':')[0]);
+            const m_e = parseInt(te.split(':')[1]);
+            let hours = h_e - h_s + (m_e > 0 ? 1 : 0);
+            if (hours < 0) hours = 0;
 
-            // 料金テーブル参照
-            let rateType = (isHoliday || startH >= 17) ? 'night' : 'day';
+            // 料金判定
+            const isNight = (h_s >= 17 || new Date(d).getDay() === 0 || new Date(d).getDay() === 6);
+            let calcCat = (fac.includes("会議室") && cat === "高校生以下") ? "その他一般" : cat;
             
-            // 会議室の場合、高校生以下も一般料金を適用
-            let calcCategory = category;
-            if (fac.includes("会議室") && category === "高校生以下") calcCategory = "その他一般";
-
-            const unitPrice = RATES[fac][calcCategory][rateType];
-            const acPrice = useAc ? (RATES[fac].ac * hours) : 0;
-
-            total += (unitPrice * hours) + acPrice;
+            const unit = isNight ? RATES[fac][calcCat].n : RATES[fac][calcCat].d;
+            const acFee = ac ? RATES[fac].ac * hours : 0;
+            
+            total += (unit * hours) + acFee;
+            printDetail += `${d}　${fac} (${ts}～${te}) ${ac ? '※空調有':''}<br>`;
         }
 
+        // 表示更新
         document.getElementById('ui_total').innerText = `¥ ${total.toLocaleString()}`;
-        document.getElementById('p_total').innerText = total.toLocaleString();
-        updatePrintView();
-    }
-
-    function updatePrintView() {
+        document.getElementById('p_total_sum').innerText = total.toLocaleString();
+        
+        // 印刷用シンク
         document.getElementById('p_orgName').innerText = document.getElementById('in_orgName').value;
+        document.getElementById('p_address').innerText = document.getElementById('in_address').value;
+        document.getElementById('p_repName').innerText = document.getElementById('in_repName').value;
         document.getElementById('p_appName').innerText = document.getElementById('in_appName').value;
         document.getElementById('p_phone').innerText = document.getElementById('in_phone').value;
+        document.getElementById('p_purpose').innerText = document.getElementById('in_purpose').value;
+        document.getElementById('p_people').innerText = document.getElementById('in_people').value;
+        document.getElementById('p_datetime_list').innerHTML = printDetail;
         
-        let detail = "";
-        for(let i=1; i<=3; i++) {
-            const fac = document.getElementById(`fac_${i}`).value;
-            if(!fac) continue;
-            detail += `${document.getElementById(`date_${i}`).value}　${fac}　${document.getElementById(`start_${i}`).value}～${document.getElementById(`end_${i}`).value}<br>`;
-        }
-        document.getElementById('p_datetime_list').innerHTML = detail;
+        // 区分チェック
+        const cMap = {"加盟（入居）団体":"■加盟団体", "高校生以下":"■高校生以下", "その他一般":"■その他一般"};
+        document.getElementById('p_category_check').innerText = cMap[cat] || "";
     }
 
-    window.onload = createEntries;
+    window.onload = init;
 </script>
-
 </body>
 </html>
