@@ -2,89 +2,104 @@
 <html lang="ja">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>施設使用申請書システム_公式版</title>
     <style>
         /* =========================================
            画面表示用（公共機関向け高品質UI）
            ========================================= */
         :root { 
-            --gov-blue: #1a365d; 
-            --gov-blue-light: #2b6cb0;
-            --bg-color: #f1f5f9; 
+            --gov-blue: #0f4c81; 
+            --gov-blue-light: #3a7bd5;
+            --gov-blue-bg: #eaf1f8;
+            --bg-color: #f4f7f9; 
             --card-bg: #ffffff;
-            --text-main: #1e293b;
-            --border-color: #cbd5e1;
+            --text-main: #2d3748;
+            --text-muted: #718096;
+            --border-color: #e2e8f0;
             --accent-green: #059669;
             --accent-hover: #047857;
-            --required-red: #dc2626;
+            --required-red: #e53e3e;
+            --shadow-sm: 0 1px 3px rgba(0,0,0,0.1);
+            --shadow-md: 0 4px 6px rgba(0,0,0,0.05), 0 1px 3px rgba(0,0,0,0.1);
+            --shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.1), 0 4px 6px -2px rgba(0,0,0,0.05);
         }
-        body { font-family: "Noto Sans JP", "Helvetica Neue", Arial, sans-serif; background: var(--bg-color); margin: 0; padding: 0; color: var(--text-main); line-height: 1.6; }
+        body { font-family: "Hiragino Kaku Gothic ProN", "Noto Sans JP", "Yu Gothic", sans-serif; background: var(--bg-color); margin: 0; padding: 0; color: var(--text-main); line-height: 1.6; }
         
         /* ヘッダー */
-        .app-header { background: var(--gov-blue); color: white; padding: 20px; text-align: center; box-shadow: 0 2px 4px rgba(0,0,0,0.1); margin-bottom: 30px; }
-        .app-header h1 { margin: 0; font-size: 22px; letter-spacing: 1.5px; }
-        .app-header p { margin: 5px 0 0 0; font-size: 12px; opacity: 0.8; }
+        .app-header { background: linear-gradient(135deg, var(--gov-blue) 0%, var(--gov-blue-light) 100%); color: white; padding: 25px 20px; text-align: center; box-shadow: var(--shadow-md); margin-bottom: 40px; }
+        .app-header h1 { margin: 0; font-size: 24px; letter-spacing: 2px; font-weight: 600; text-shadow: 0 2px 4px rgba(0,0,0,0.2); }
+        .app-header p { margin: 8px 0 0 0; font-size: 13px; opacity: 0.9; letter-spacing: 1px;}
 
         .no-print-container { max-width: 900px; margin: 0 auto; padding: 0 20px 40px; }
         
         /* セクションカード */
-        .section-card { background: var(--card-bg); border-radius: 8px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -1px rgba(0,0,0,0.06); padding: 25px; margin-bottom: 25px; border-top: 4px solid var(--gov-blue-light); }
-        .section-title { font-size: 18px; font-weight: bold; color: var(--gov-blue); margin-top: 0; margin-bottom: 20px; display: flex; align-items: center; border-bottom: 1px solid var(--border-color); padding-bottom: 10px; }
+        .section-card { background: var(--card-bg); border-radius: 12px; box-shadow: var(--shadow-md); padding: 30px; margin-bottom: 30px; border-left: 6px solid var(--gov-blue-light); transition: transform 0.2s ease, box-shadow 0.2s ease; }
+        .section-card:hover { box-shadow: var(--shadow-lg); }
+        .section-title { font-size: 20px; font-weight: 600; color: var(--gov-blue); margin-top: 0; margin-bottom: 25px; display: flex; align-items: center; border-bottom: 2px solid var(--gov-blue-bg); padding-bottom: 12px; }
+        .section-title svg { margin-right: 10px; width: 24px; height: 24px; color: var(--gov-blue-light); }
         
         /* 必須バッジ */
-        .badge-req { background: var(--required-red); color: white; font-size: 11px; padding: 2px 6px; border-radius: 4px; margin-left: 8px; vertical-align: middle; font-weight: normal; }
+        .badge-req { background: var(--required-red); color: white; font-size: 11px; padding: 3px 8px; border-radius: 20px; margin-left: 10px; vertical-align: middle; font-weight: 600; letter-spacing: 0.5px; box-shadow: 0 2px 4px rgba(229, 62, 62, 0.2); }
 
         /* フォーム要素 */
-        .input-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
-        @media (max-width: 600px) { .input-grid { grid-template-columns: 1fr; } }
-        .form-group { margin-bottom: 15px; }
-        label.form-label { display: block; font-weight: bold; margin-bottom: 6px; font-size: 14px; color: #334155; }
+        .input-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 25px; }
+        @media (max-width: 650px) { .input-grid { grid-template-columns: 1fr; gap: 15px;} }
+        .form-group { margin-bottom: 20px; }
+        label.form-label { display: block; font-weight: 600; margin-bottom: 8px; font-size: 14px; color: var(--text-main); }
         input[type="text"], input[type="tel"], input[type="number"], input[type="date"], select { 
-            width: 100%; padding: 10px 12px; border: 1px solid var(--border-color); border-radius: 6px; box-sizing: border-box; font-size: 15px; transition: border-color 0.2s; background-color: #f8fafc;
+            width: 100%; padding: 12px 16px; border: 1px solid var(--border-color); border-radius: 8px; box-sizing: border-box; font-size: 15px; transition: all 0.2s ease; background-color: #f8fafc; color: var(--text-main);
         }
-        input:focus, select:focus { outline: none; border-color: var(--gov-blue-light); background-color: #fff; box-shadow: 0 0 0 3px rgba(43, 108, 176, 0.1); }
+        input:focus, select:focus { outline: none; border-color: var(--gov-blue-light); background-color: #fff; box-shadow: 0 0 0 4px var(--focus-ring); }
 
         /* 利用区分専用 */
-        .category-select { font-size: 16px; font-weight: bold; padding: 12px; border: 2px solid var(--gov-blue-light); background-color: #eff6ff; }
-        #affiliated_org_area { background: #f0fdf4; padding: 15px; border-radius: 6px; border: 1px solid #bbf7d0; margin-top: 15px; }
+        .category-select { font-size: 16px; font-weight: 600; padding: 14px; border: 2px solid var(--gov-blue-light); background-color: #f0f7ff; color: var(--gov-blue); cursor: pointer; }
+        #affiliated_org_area { background: #f0fdf4; padding: 20px; border-radius: 8px; border: 1px solid #bbf7d0; margin-top: 20px; animation: fadeIn 0.3s ease; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(-5px); } to { opacity: 1; transform: translateY(0); } }
 
         /* 日時入力エリア */
-        .date-entry-group { background: #f8fafc; border: 1px solid var(--border-color); padding: 15px; border-radius: 6px; margin-bottom: 15px; }
-        .date-row { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
-        .date-label-badge { background: var(--gov-blue); color: white; padding: 4px 8px; border-radius: 4px; font-size: 12px; font-weight: bold; }
-        .date-row select.fac-select { width: 160px; }
-        .date-row input[type="date"] { width: 150px; }
-        .day-display { font-size: 14px; font-weight: bold; color: var(--gov-blue-light); min-width: 3em; }
-        .date-row select.time-select { width: 100px; }
-        .ac-check-label { font-size: 14px; display: flex; align-items: center; cursor: pointer; background: #e0f2fe; padding: 8px 12px; border-radius: 6px; border: 1px solid #bae6fd; margin-left: auto; font-weight: bold; color: #0369a1;}
-        .ac-check-label input { width: 18px; height: 18px; margin-right: 8px; cursor: pointer; }
+        .date-entry-group { background: #f8fafc; border: 1px solid var(--border-color); padding: 20px; border-radius: 8px; margin-bottom: 20px; transition: background 0.2s; }
+        .date-entry-group:hover { background: #f1f5f9; }
+        .date-row { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; }
+        .date-label-badge { background: var(--gov-blue); color: white; padding: 6px 12px; border-radius: 6px; font-size: 13px; font-weight: 600; box-shadow: var(--shadow-sm); }
+        .date-row select.fac-select { width: 180px; font-weight: 600; }
+        .date-row input[type="date"] { width: 160px; cursor: pointer; }
+        .day-display { font-size: 15px; font-weight: 600; color: var(--gov-blue-light); min-width: 3.5em; text-align: center; }
+        .date-row select.time-select { width: 110px; cursor: pointer; }
+        .ac-check-label { font-size: 14px; display: flex; align-items: center; cursor: pointer; background: #e0f2fe; padding: 10px 16px; border-radius: 8px; border: 1px solid #bae6fd; margin-left: auto; font-weight: 600; color: #0284c7; transition: all 0.2s; box-shadow: var(--shadow-sm);}
+        .ac-check-label:hover { background: #bae6fd; transform: translateY(-1px); }
+        .ac-check-label input { width: 18px; height: 18px; margin-right: 10px; cursor: pointer; accent-color: #0284c7; }
 
         /* 附帯設備エリア */
-        .eq-group-title { font-size: 14px; font-weight: bold; margin: 15px 0 8px 0; color: var(--gov-blue-light); background: #e2e8f0; padding: 5px 10px; border-radius: 4px; display: inline-block;}
-        .eq-row { display: flex; flex-wrap: wrap; gap: 15px; font-size: 14px; margin-bottom: 10px; align-items: center; }
-        .eq-item { display: flex; align-items: center; cursor: pointer; background: #fff; border: 1px solid var(--border-color); padding: 8px 12px; border-radius: 6px; transition: background 0.2s;}
-        .eq-item:hover { background: #f1f5f9; }
-        .eq-item input[type="checkbox"] { width: 16px; height: 16px; margin-right: 8px; }
-        .eq-note { font-size: 12px; color: #64748b; margin-bottom: 15px; margin-left: 5px;}
+        .eq-group-title { font-size: 14px; font-weight: 600; margin: 20px 0 12px 0; color: var(--gov-blue); background: var(--gov-blue-bg); padding: 6px 12px; border-radius: 6px; display: inline-block;}
+        .eq-row { display: flex; flex-wrap: wrap; gap: 15px; font-size: 14px; margin-bottom: 15px; align-items: center; }
+        .eq-item { display: flex; align-items: center; cursor: pointer; background: #fff; border: 1px solid var(--border-color); padding: 10px 16px; border-radius: 8px; transition: all 0.2s; box-shadow: var(--shadow-sm); font-weight: 500;}
+        .eq-item:hover { border-color: var(--gov-blue-light); background: #f8fafc; transform: translateY(-1px); }
+        .eq-item input[type="checkbox"] { width: 18px; height: 18px; margin-right: 10px; accent-color: var(--gov-blue); cursor: pointer; }
+        .eq-note { font-size: 12px; color: var(--text-muted); margin-bottom: 20px; margin-left: 5px; line-height: 1.5;}
 
         /* 計算・出力エリア */
-        .action-area { position: sticky; bottom: 20px; z-index: 100; }
-        .calc-box { background: #fff; padding: 20px; border-radius: 8px; border: 2px solid var(--gov-blue); box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap;}
+        .action-area { position: sticky; bottom: 20px; z-index: 100; animation: slideUp 0.5s ease; }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        .calc-box { background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); padding: 25px 30px; border-radius: 16px; border: 2px solid var(--gov-blue); box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1), 0 10px 10px -5px rgba(0,0,0,0.04); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap;}
         .total-wrapper { text-align: left; }
-        .total-label { font-size: 14px; font-weight: bold; color: #64748b; }
-        .total-price { font-size: 32px; font-weight: bold; color: var(--gov-blue); margin-top: -5px;}
-        .calc-detail-live { font-size: 13px; color: #475569; width: 100%; margin-top: 15px; border-top: 1px dashed var(--border-color); padding-top: 10px; line-height: 1.6; }
-        .print-btn { padding: 15px 30px; background: var(--accent-green); color: white; border: none; border-radius: 6px; font-size: 18px; font-weight: bold; cursor: pointer; transition: background 0.2s; box-shadow: 0 4px 6px rgba(5, 150, 105, 0.3); display: flex; align-items: center; justify-content: center; gap: 8px;}
-        .print-btn:hover { background: var(--accent-hover); transform: translateY(-1px); box-shadow: 0 6px 8px rgba(5, 150, 105, 0.4);}
+        .total-label { font-size: 14px; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; }
+        .total-price { font-size: 36px; font-weight: 700; color: var(--gov-blue); margin-top: -2px; font-family: "Helvetica Neue", Arial, sans-serif;}
+        .calc-detail-live { font-size: 14px; color: var(--text-muted); width: 100%; margin-top: 20px; border-top: 1px dashed var(--border-color); padding-top: 15px; line-height: 1.8; }
+        .print-btn { padding: 16px 32px; background: var(--accent-green); color: white; border: none; border-radius: 8px; font-size: 18px; font-weight: 600; cursor: pointer; transition: all 0.2s; box-shadow: 0 4px 6px rgba(5, 150, 105, 0.3); display: flex; align-items: center; justify-content: center; gap: 10px;}
+        .print-btn:hover { background: var(--accent-hover); transform: translateY(-2px); box-shadow: 0 8px 12px rgba(5, 150, 105, 0.4);}
+        .print-btn svg { width: 22px; height: 22px; }
 
         /* 料金表スタイル */
-        .rate-table-wrapper { background: #fff; border: 1px solid var(--border-color); padding: 25px; border-radius: 8px; margin-top: 40px; }
-        .modern-table { width: 100%; border-collapse: collapse; margin-bottom: 25px; font-size: 14px; text-align: center; }
-        .modern-table th { background-color: var(--gov-blue); color: white; border: 1px solid var(--border-color); padding: 12px; font-weight: normal; }
-        .modern-table td { border: 1px solid var(--border-color); padding: 12px; color: var(--text-main); }
+        .rate-table-wrapper { background: #fff; border: 1px solid var(--border-color); padding: 30px; border-radius: 12px; margin-top: 50px; box-shadow: var(--shadow-sm); }
+        .modern-table { width: 100%; border-collapse: separate; border-spacing: 0; margin-bottom: 30px; font-size: 14px; text-align: center; border-radius: 8px; overflow: hidden; border: 1px solid var(--border-color); }
+        .modern-table th { background-color: var(--gov-blue-bg); color: var(--gov-blue); border-bottom: 1px solid var(--border-color); border-right: 1px solid var(--border-color); padding: 14px; font-weight: 600; }
+        .modern-table td { border-bottom: 1px solid var(--border-color); border-right: 1px solid var(--border-color); padding: 14px; color: var(--text-main); }
+        .modern-table th:last-child, .modern-table td:last-child { border-right: none; }
+        .modern-table tr:last-child td { border-bottom: none; }
         .modern-table tr:nth-child(even) td { background-color: #f8fafc; }
-        .table-section-title { font-weight: bold; margin-bottom: 10px; color: var(--gov-blue); font-size: 16px; border-left: 4px solid var(--gov-blue-light); padding-left: 10px;}
-        .table-note { font-size: 12px; font-weight: normal; color: #64748b; margin-left: 10px; }
+        .table-section-title { font-weight: 600; margin-bottom: 12px; color: var(--gov-blue); font-size: 18px; border-left: 5px solid var(--gov-blue-light); padding-left: 12px;}
+        .table-note { font-size: 13px; font-weight: normal; color: var(--text-muted); margin-left: 10px; }
 
         /* =========================================
            印刷・PDF出力用（厳格な原本維持）
@@ -92,9 +107,9 @@
         .print-only { display: none; }
         @media print {
             @page { size: A4; margin: 10mm 15mm; }
-            body { margin: 0; padding: 0; background: #fff; }
+            body { margin: 0; padding: 0; background: #fff; color: #000; }
             .app-header, .no-print-container, .action-area { display: none !important; }
-            .print-only { display: block; width: 100%; color: #000; font-family: "MS Mincho", "Hiragino Mincho ProN", serif; }
+            .print-only { display: block; width: 100%; font-family: "MS Mincho", "Hiragino Mincho ProN", serif; }
             
             .p-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 15px; }
             .p-receipt-table td { border: 1px solid #000; width: 85px; height: 85px; text-align: center; vertical-align: top; font-size: 10pt; padding-top: 4px; }
@@ -126,7 +141,10 @@
 <div class="no-print-container">
     
     <div class="section-card">
-        <h2 class="section-title">1. 利用区分の選択<span class="badge-req">必須</span></h2>
+        <h2 class="section-title">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+            1. 利用区分の選択<span class="badge-req">必須</span>
+        </h2>
         <div class="form-group">
             <select id="in_category" class="category-select" onchange="toggleCategory(); calc();">
                 <option value="その他一般" selected>その他一般</option>
@@ -137,22 +155,51 @@
         
         <div id="affiliated_org_area" style="display: none;">
             <label class="form-label" style="color: #166534;">■ 沖縄県スポーツ協会 加盟団体名を選択してください</label>
-            <select id="in_affiliated_select" onchange="syncOrgName()" style="border-color: #86efac;">
+            <select id="in_affiliated_select" onchange="syncOrgName()" style="border-color: #86efac; font-size:16px;">
                 <option value="">-- 団体を選択してください --</option>
-                <option value="沖縄県ハンドボール協会">沖縄県ハンドボール協会</option>
-                <option value="沖縄県陸上競技協会">沖縄県陸上競技協会</option>
-                <option value="沖縄県水泳連盟">沖縄県水泳連盟</option>
-                <option value="沖縄県バスケットボール協会">沖縄県バスケットボール協会</option>
-                <option value="沖縄県バレーボール協会">沖縄県バレーボール協会</option>
-                <option value="沖縄県サッカー協会">沖縄県サッカー協会</option>
-                <option value="沖縄県スポーツ少年団">沖縄県スポーツ少年団</option>
-                <option value="その他（手入力）">その他（直接入力する）</option>
+                <optgroup label="競技団体（アイウエオ順目安）">
+                    <option value="沖縄県アーチェリー協会">沖縄県アーチェリー協会</option>
+                    <option value="沖縄県ウエイトリフティング協会">沖縄県ウエイトリフティング協会</option>
+                    <option value="沖縄県空手道連盟">沖縄県空手道連盟</option>
+                    <option value="一般社団法人 沖縄県弓道連盟">一般社団法人 沖縄県弓道連盟</option>
+                    <option value="沖縄県クレー射撃協会">沖縄県クレー射撃協会</option>
+                    <option value="一般財団法人 沖縄県剣道連盟">一般財団法人 沖縄県剣道連盟</option>
+                    <option value="一般社団法人 沖縄県サッカー協会">一般社団法人 沖縄県サッカー協会</option>
+                    <option value="沖縄県自転車競技連盟">沖縄県自転車競技連盟</option>
+                    <option value="沖縄県銃剣道連盟">沖縄県銃剣道連盟</option>
+                    <option value="沖縄県柔道連盟">沖縄県柔道連盟</option>
+                    <option value="沖縄県水泳連盟">沖縄県水泳連盟</option>
+                    <option value="沖縄県相撲連盟">沖縄県相撲連盟</option>
+                    <option value="沖縄県ソフトテニス連盟">沖縄県ソフトテニス連盟</option>
+                    <option value="沖縄県体操協会">沖縄県体操協会</option>
+                    <option value="沖縄県卓球協会">沖縄県卓球協会</option>
+                    <option value="沖縄県テニス協会">沖縄県テニス協会</option>
+                    <option value="沖縄県なぎなた連盟">沖縄県なぎなた連盟</option>
+                    <option value="一般財団法人 沖縄県バスケットボール協会">一般財団法人 沖縄県バスケットボール協会</option>
+                    <option value="沖縄県馬術連盟">沖縄県馬術連盟</option>
+                    <option value="沖縄県バレーボール協会">沖縄県バレーボール協会</option>
+                    <option value="沖縄県パワーリフティング協会">沖縄県パワーリフティング協会</option>
+                    <option value="沖縄県ハンドボール協会">沖縄県ハンドボール協会</option>
+                    <option value="沖縄県フェンシング協会">沖縄県フェンシング協会</option>
+                    <option value="一般社団法人 沖縄県野球連盟">一般社団法人 沖縄県野球連盟</option>
+                    <option value="沖縄県ラグビーフットボール協会">沖縄県ラグビーフットボール協会</option>
+                    <option value="沖縄県ライフル射撃協会">沖縄県ライフル射撃協会</option>
+                    <option value="沖縄県陸上競技協会">沖縄県陸上競技協会</option>
+                    <option value="沖縄県レスリング協会">沖縄県レスリング協会</option>
+                </optgroup>
+                <optgroup label="その他関連団体">
+                    <option value="沖縄県スポーツ少年団">沖縄県スポーツ少年団</option>
+                    <option value="その他（手入力）">その他（直接入力する）</option>
+                </optgroup>
             </select>
         </div>
     </div>
 
     <div class="section-card">
-        <h2 class="section-title">2. 申請者情報</h2>
+        <h2 class="section-title">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+            2. 申請者情報
+        </h2>
         <div class="input-grid">
             <div class="form-col">
                 <div class="form-group"><label class="form-label">団体名<span class="badge-req">必須</span></label><input type="text" id="in_orgName" placeholder="例：〇〇スポーツクラブ"></div>
@@ -169,8 +216,11 @@
     </div>
 
     <div class="section-card">
-        <h2 class="section-title">3. 使用施設と日時の設定<span class="badge-req">必須</span></h2>
-        <p style="font-size: 13px; color: #64748b; margin-top: -10px; margin-bottom: 15px;">※最大3つの枠まで同時に予約申請が可能です。</p>
+        <h2 class="section-title">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+            3. 使用施設と日時の設定<span class="badge-req">必須</span>
+        </h2>
+        <p style="font-size: 13px; color: var(--text-muted); margin-top: -10px; margin-bottom: 20px;">※最大3つの枠まで同時に予約申請が可能です。</p>
         <div id="date_entries">
             <script>
                 for(let i=1; i<=3; i++) {
@@ -209,12 +259,15 @@
     </div>
 
     <div class="section-card">
-        <h2 class="section-title">4. 附帯設備（備品）の選択</h2>
+        <h2 class="section-title">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 17 12 22 22 17"></polyline><polyline points="2 12 12 17 22 12"></polyline></svg>
+            4. 附帯設備（備品）の選択
+        </h2>
         
         <div class="eq-group-title">【会議室用】</div>
         <div class="eq-row">
             <label class="eq-item"><input type="checkbox" id="check_audio">音響設備</label>
-            <label class="eq-item"><input type="checkbox" id="check_mic">マイク <input type="number" id="in_mic_count" value="0" min="0" style="width:50px; padding:4px; margin:0 5px; border:1px solid #ccc; border-radius:4px;"> 本</label>
+            <label class="eq-item"><input type="checkbox" id="check_mic">マイク <input type="number" id="in_mic_count" value="0" min="0" style="width:60px; padding:6px; margin:0 5px; border:1px solid #cbd5e1; border-radius:6px; background:#f8fafc;"> 本</label>
             <label class="eq-item"><input type="checkbox" id="check_entai">演台</label>
             <label class="eq-item"><input type="checkbox" id="check_proj">映像設備※</label>
         </div>
@@ -228,8 +281,8 @@
         </div>
         <div class="eq-note">※バレー・バドミントンのネット、卓球台は貸出可能です。ボール・シャトル・ラケット等は各自ご持参ください。</div>
 
-        <div class="form-group" style="margin-top: 15px;">
-            <label class="form-label" style="font-weight: normal;">その他の設備・連絡事項等</label>
+        <div class="form-group" style="margin-top: 25px;">
+            <label class="form-label" style="font-weight: 600; color: var(--gov-blue);">その他の設備・連絡事項等</label>
             <input type="text" id="in_eq_other" placeholder="必要な場合はご記入ください">
         </div>
     </div>
@@ -241,7 +294,7 @@
                 <div class="total-price" id="ui_total">￥0</div>
             </div>
             <button class="print-btn" onclick="validateAndPrint()">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 6 2 18 2 18 9"></polyline><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path><rect x="6" y="14" width="12" height="8"></rect></svg>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 6 2 18 2 18 9"></polyline><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path><rect x="6" y="14" width="12" height="8"></rect></svg>
                 内容を確定してPDF・印刷出力
             </button>
             <div id="ui_detail_log" class="calc-detail-live">施設・日時を選択すると、自動で料金が計算されます。</div>
@@ -249,9 +302,12 @@
     </div>
 
     <div class="rate-table-wrapper">
-        <h3 class="table-section-title" style="border:none; border-bottom: 2px solid var(--border-color); padding-left:0; padding-bottom:10px;">■ 施設使用料（1時間あたり / 税込）</h3>
+        <h3 class="table-section-title" style="border:none; border-bottom: 2px solid var(--border-color); padding-left:0; padding-bottom:15px; display:flex; align-items:center; gap:8px;">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"></line><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
+            施設使用料（1時間あたり / 税込）
+        </h3>
         
-        <div class="table-section-title">体育館</div>
+        <div class="table-section-title" style="margin-top: 20px;">体育館</div>
         <table class="modern-table">
             <tr>
                 <th>時間帯</th>
@@ -273,10 +329,10 @@
             </tr>
         </table>
 
-        <div class="table-section-title" style="margin-top: 30px;">会議室 <span class="table-note">※会議室は「高校生以下」も一般料金が適用されます。</span></div>
+        <div class="table-section-title" style="margin-top: 40px;">会議室 <span class="table-note">※会議室は「高校生以下」も一般料金が適用されます。</span></div>
         <table class="modern-table">
             <tr>
-                <th rowspan="2" style="width: 20%; background-color: #f1f5f9; color:var(--gov-blue); font-weight:bold;">施設名</th>
+                <th rowspan="2" style="width: 20%; background-color: var(--card-bg); color:var(--gov-blue); font-weight:bold; border-bottom:1px solid var(--border-color);">施設名</th>
                 <th colspan="2">平日 9:00〜17:00</th>
                 <th colspan="2">平日 17:00以降 ＆ 土祝日</th>
             </tr>
@@ -287,21 +343,21 @@
                 <th>その他一般</th>
             </tr>
             <tr>
-                <td style="font-weight:bold;">会議室 AB</td>
+                <td style="font-weight:bold; background-color: #fff;">会議室 AB</td>
                 <td>770円</td>
                 <td>1,100円</td>
                 <td>1,100円</td>
                 <td>1,650円</td>
             </tr>
             <tr>
-                <td style="font-weight:bold;">会議室 A</td>
+                <td style="font-weight:bold; background-color: #fff;">会議室 A</td>
                 <td>440円</td>
                 <td>660円</td>
                 <td>660円</td>
                 <td>990円</td>
             </tr>
             <tr>
-                <td style="font-weight:bold;">会議室 B</td>
+                <td style="font-weight:bold; background-color: #fff;">会議室 B</td>
                 <td>330円</td>
                 <td>440円</td>
                 <td>440円</td>
@@ -309,7 +365,7 @@
             </tr>
         </table>
 
-        <div class="table-section-title" style="margin-top: 30px;">空調使用料 <span class="table-note">※1時間あたり。利用する場合は施設使用料に加算されます。</span></div>
+        <div class="table-section-title" style="margin-top: 40px;">空調使用料 <span class="table-note">※1時間あたり。利用する場合は施設使用料に加算されます。</span></div>
         <table class="modern-table" style="width: 100%;">
             <tr>
                 <th>会議室 AB</th>
@@ -450,16 +506,16 @@
         const w = ['日','月','火','水','木','金','土'];
         if(HOLIDAYS.includes(dStr)) {
             dispEl.innerText = "（祝）";
-            dispEl.style.color = "#dc2626"; // 祝日は赤
+            dispEl.style.color = "#e53e3e"; // 祝日は赤
         } else if (d.getDay() === 0) {
             dispEl.innerText = "（日）";
-            dispEl.style.color = "#dc2626";
+            dispEl.style.color = "#e53e3e";
         } else if (d.getDay() === 6) {
             dispEl.innerText = "（土）";
-            dispEl.style.color = "#2563eb"; // 土曜は青
+            dispEl.style.color = "#3182ce"; // 土曜は青
         } else {
             dispEl.innerText = `（${w[d.getDay()]}）`;
-            dispEl.style.color = "#1a365d";
+            dispEl.style.color = "var(--gov-blue)";
         }
     }
 
@@ -513,7 +569,7 @@
                 
                 grandTotal += Math.ceil(rowTotal);
                 document.getElementById('p_row' + i).innerText = `【${fac}】 ` + rowText;
-                logHtml += `<div><span style="display:inline-block; width:60px; color:var(--gov-blue-light); font-weight:bold;">予約${i}</span> <strong>${fac}:</strong> ${rowText}</div>`;
+                logHtml += `<div style="margin-bottom:6px;"><span style="display:inline-block; padding:2px 8px; background:var(--gov-blue-bg); color:var(--gov-blue); border-radius:4px; font-weight:600; margin-right:8px; font-size:12px;">予約${i}</span> <strong style="color:var(--text-main);">${fac}:</strong> ${rowText}</div>`;
             } else {
                 document.getElementById('p_row' + i).innerText = "";
             }
