@@ -138,15 +138,6 @@
         <div id="affiliated_org_area" style="display: none;">
             <label class="form-label" style="color: #166534;">■ 沖縄県スポーツ協会 加盟団体名を選択してください</label>
             <select id="in_affiliated_select" onchange="syncOrgName()" style="border-color: #86efac;">
-                <option value="">-- 団体を選択してください --</option>
-                <option value="沖縄県ハンドボール協会">沖縄県ハンドボール協会</option>
-                <option value="沖縄県陸上競技協会">沖縄県陸上競技協会</option>
-                <option value="沖縄県水泳連盟">沖縄県水泳連盟</option>
-                <option value="沖縄県バスケットボール協会">沖縄県バスケットボール協会</option>
-                <option value="沖縄県バレーボール協会">沖縄県バレーボール協会</option>
-                <option value="沖縄県サッカー協会">沖縄県サッカー協会</option>
-                <option value="沖縄県スポーツ少年団">沖縄県スポーツ少年団</option>
-                <option value="その他（手入力）">その他（直接入力する）</option>
             </select>
         </div>
     </div>
@@ -401,6 +392,97 @@
 </div>
 
 <script>
+    // ▼ 加盟団体データの登録 ▼
+    const AFFILIATED_ORGS = [
+        { no: 1, name: "一般社団法人沖縄県水泳連盟", rep: "川満正芳", address: "浦添市港川2-11-8 沖縄スイミングスクール内" },
+        { no: 2, name: "沖縄県ローイング協会", rep: "大城隼人", address: "沖縄市比屋根6-1-30 大城隼人気付" },
+        { no: 3, name: "沖縄県セーリング連盟", rep: "石垣正春", address: "那覇市泊3-12-6 有銘兼一樣方" },
+        { no: 4, name: "沖縄県カヌー協会", rep: "大湾文雄", address: "糸満市西崎町1-1-1 沖縄県立沖縄水産高等学校内" },
+        { no: 5, name: "沖縄県ボウリング連盟", rep: "翁長政俊", address: "那覇市奥武山町51-2 沖縄県体協スポーツ会館4階 401号室" },
+        { no: 6, name: "一般社団法人沖縄陸上競技協会", rep: "宮里朝之", address: "那覇市奥武山町51-2 沖縄県体協スポーツ会館5階 506号室" },
+        { no: 7, name: "一般社団法人 沖縄県サッカー協会", rep: "宮城淳也", address: "那覇市奥武山町51-2 沖縄県体協スポーツ会館 406号室" },
+        { no: 8, name: "沖縄県テニス協会", rep: "下地誠", address: "那覇市小禄1-3-25 パラシオ大橋101号" },
+        { no: 9, name: "沖縄県ホッケー協会", rep: "大城健哉", address: "国頭郡今帰仁村字仲宗根219番地" },
+        { no: 10, name: "沖縄県ボクシング連盟", rep: "島袋洋", address: "那覇市奥武山町51-2 沖縄県体協スポーツ会館307号室" },
+        { no: 11, name: "沖縄県バレーボール協会", rep: "川田学", address: "浦添市牧港5丁目19番1号 沖縄県建設事業協同組合気付" },
+        { no: 12, name: "沖縄県体操協会", rep: "知念義雄", address: "浦添市宮城2-15-3 205" },
+        { no: 13, name: "一般財団法人沖縄県バスケットボール協会", rep: "稲福盛也", address: "那覇市安謝653番地 株式会社国際重機ビル602号室" },
+        { no: 14, name: "沖縄県レスリング協会", rep: "中川京貴", address: "島尻郡南風原町津嘉山1140 南風原高等学校内" },
+        { no: 15, name: "沖縄県ウエイトリフティング協会", rep: "平仲康", address: "那覇市奥武山町51-2 沖縄県スポーツ協会内" },
+        { no: 16, name: "沖縄県ハンドボール協会", rep: "根路銘達也", address: "浦添市宮城6-13-1 小湾自治会館3階" },
+        { no: 17, name: "沖縄県自転車競技連盟", rep: "山本正秀", address: "那覇市久米2丁目7-17 高良マンション301" },
+        { no: 18, name: "沖縄県ソフトテニス連盟", rep: "宮城正彦", address: "那覇市奥武山町51-2 沖縄県体協スポーツ会館5階 502号室" },
+        { no: 19, name: "沖縄県卓球協会", rep: "伊志嶺朝司", address: "沖縄市久保田1-4-15 2F" },
+        { no: 20, name: "一般社団法人 沖縄県野球連盟", rep: "又吉民人", address: "那覇市港町2-12-22 沖縄港湾労働者福祉センター1階" },
+        { no: 21, name: "沖縄県相撲連盟", rep: "前西原裕", address: "沖縄市美里4丁目18番1号(沖縄県立美咲特別支援学校内)" },
+        { no: 22, name: "沖縄県馬術連盟", rep: "宮城和志", address: "那覇市奥武山町51-2 沖縄県体協スポーツ会館3階 307号室" },
+        { no: 23, name: "沖縄県フェンシング協会", rep: "伊波良和", address: "那覇市泊3-15-3 サンライト泊702 阿波連本広様方" },
+        { no: 24, name: "沖縄県柔道連盟", rep: "宮城真政", address: "那覇市長田2-5-31-101 アスリートクラブ琉9内" },
+        { no: 25, name: "沖縄県ソフトボール協会", rep: "稲福孝", address: "那覇市奥武山町51-2 沖縄県体協スポーツ会館3階 307号室" },
+        { no: 26, name: "沖縄県バドミントン協会", rep: "新里登", address: "沖縄市泡瀬3-34-6 メゾン桑江202号" },
+        { no: 27, name: "一般社団法人沖縄県弓道連盟", rep: "我如古尚", address: "宜野湾市嘉数2-15-25-203" },
+        { no: 28, name: "沖縄県ライフル射撃協会", rep: "照屋峰一", address: "那覇市銘苅239-2" },
+        { no: 29, name: "一般財団法人 沖縄県剣道連盟", rep: "富山嘉津男", address: "那覇市奥武山町51-2 沖縄県体協スポーツ会館5階 501号室" },
+        { no: 30, name: "沖縄県ラグビーフットボール協会", rep: "辺士名斉朝", address: "読谷村字伊良皆198 県立読谷高等学校内" },
+        { no: 31, name: "沖縄県アーチェリー協会", rep: "新城敦志", address: "浦添市内間4-12-3" },
+        { no: 32, name: "沖縄県空手道連盟", rep: "高良正剛", address: "中頭郡読谷村字高志保356-1" },
+        { no: 33, name: "沖縄県銃剣道連盟", rep: "山縣正明", address: "糸満市字大里135-1 加藤哲也様方" },
+        { no: 34, name: "沖縄県クレー射撃協会", rep: "渡久地政人", address: "那覇市泉崎1-2-2 沖縄県庁 自然保護課 気付" },
+        { no: 35, name: "沖縄県なぎなた連盟", rep: "笠原松美", address: "西原町字我謝815 メゾンライフ103" },
+        { no: 36, name: "沖縄県パワーリフティング協会", rep: "平良治雄", address: "沖縄市泡瀬5-36-31 1階" },
+        { no: 37, name: "沖縄県アイスホッケー連盟", rep: "三沢悟", address: "島尻郡南風原町字宮平460-1 エナジックスポーツワールドサザンヒル アイスアリーナ内" },
+        { no: 38, name: "沖縄県スキー連盟", rep: "尾田真", address: "那覇市奥武山町51-2 沖縄県体協スポーツ会館5階 505号室" },
+        { no: 39, name: "沖縄県山岳・スポーツクライミング連盟", rep: "小原俊之", address: "那覇市奥武山町51-2 沖縄県体協スポーツ会館 307号室" },
+        { no: 40, name: "沖縄県ゲートボール連合", rep: "大城哲夫", address: "八重瀬町字伊覇433-2 エルガーデン八重瀬A-1号室" },
+        { no: 41, name: "一般社団法人沖縄県ゴルフ協会", rep: "當間盛夫", address: "南風原町字新川136番地 新川136-1-2号室" },
+        { no: 42, name: "一般社団法人沖縄県トライアスロン連合", rep: "池淵功", address: "那覇市奥武山町51-2 沖縄県体協スポーツ会館5階 504号室" },
+        { no: 43, name: "沖縄県ダンススポーツ連盟", rep: "安谷屋", address: "浦添市当山2-19-10" },
+        { no: 44, name: "沖縄県武術太極拳連盟", rep: "瀬名波敬一", address: "那覇市安謝268番地 沖縄県武術太極拳連盟気付" },
+        { no: 45, name: "沖縄県グラウンド・ゴルフ協会", rep: "神谷信吉", address: "南城市大里字稲嶺1165" },
+        { no: 46, name: "沖縄県少林寺拳法連盟", rep: "安室和人", address: "浦添市宮城4-12-6-403号 コーボ安里" },
+        { no: 47, name: "沖縄県スケート連盟", rep: "嘉室龍哉", address: "那覇市泊1-6-4 2階" },
+        { no: 48, name: "特定非営利活動法人 沖縄県障がい者スポーツ協会", rep: "宮里好一", address: "那覇市奥武山町51-2 沖縄県体協スポーツ会館 309号" },
+        { no: 50, name: "沖縄県合気道連盟", rep: "山口", address: "那覇市安里416 大進ビル602号室 島袋悦子様方" },
+        { no: 51, name: "沖縄県ペタンク協会", rep: "宮里正雄", address: "宜野湾市宇地泊1-14-11" },
+        { no: 52, name: "沖縄県エアロビック連盟", rep: "古波蔵喜弘", address: "那覇市牧志1-19-290-naha BF" },
+        { no: 53, name: "沖縄県キンボールスポーツ連盟", rep: "宇江城卓", address: "豊見城市豊崎1-766 宇江城卓様方" },
+        { no: 54, name: "沖縄県ボディビル・フィットネス連盟", rep: "島袋正和", address: "名護市宮里6-10-30" },
+        { no: 55, name: "沖縄県バウンドテニス協会", rep: "嘉数浩", address: "宜野湾市大山7-13-3 沖縄ヤクルト(株)社内" },
+        { no: 56, name: "日本ジャンプロープ連合沖縄県支部", rep: "津覇孝", address: "糸満市兼城438ビッグウィングペガサス703" },
+        { no: 57, name: "国頭郡体育協会", rep: "橋本昌和", address: "国頭郡宜野座村字宜野座291番地 宜野座村教育委員会 社会教育課" },
+        { no: 58, name: "名護市スポーツ協会", rep: "上間享", address: "名護市港2丁目1番1号 名護市民会館2階" },
+        { no: 59, name: "中頭郡スポーツ協会", rep: "比嘉健", address: "嘉手納町字嘉手納588番地(庁舎3階)" },
+        { no: 60, name: "うるま市スポーツ協会", rep: "中川康司", address: "うるま市みどり町1-1-1 うるま市役所西棟経済産業部スポーツ課内" },
+        { no: 61, name: "沖縄市スポーツ協会", rep: "我如古健司", address: "沖縄市諸見里2-1-1(沖縄市陸上競技場内)" },
+        { no: 62, name: "宜野湾市スポーツ協会", rep: "平良勝也", address: "宜野湾市宇地泊3丁目7番1号 宜野湾ベイサイド情報センター1F" },
+        { no: 63, name: "浦添市スポーツ協会", rep: "與儀実誠", address: "浦添市仲間1-13-1 ANA ARENA浦添内" },
+        { no: 64, name: "NPO法人 那覇市体育協会", rep: "玉城", address: "那覇市識名1227番地 那覇市民体育館内" },
+        { no: 65, name: "島尻郡体育協会", rep: "津波古清", address: "八重瀬町東風平965" },
+        { no: 66, name: "特定非営利活動法人 豊見城市体育協会", rep: "赤嶺健", address: "豊見城市字平良536番地" },
+        { no: 67, name: "南城市体育協会", rep: "新垣聡", address: "南城市玉城字富里200番地(玉城総合体育館内)" },
+        { no: 68, name: "特定非営利活動法人 糸満市体育協会", rep: "前門昌也", address: "糸満市西崎町3-1 西崎陸上競技場内" },
+        { no: 69, name: "一般社団法人宮古島市スポーツ協会", rep: "大城宜森", address: "宮古島市平良字東仲宗根935-1 宮古島市陸上競技場2階" },
+        { no: 70, name: "八重山郡スポーツ協会", rep: "前泊明和", address: "石垣市字登野城1409-1 石垣市中央運動公園陸上競技場内" },
+        { no: 71, name: "沖縄県高等学校体育連盟", rep: "柿本恵子", address: "那覇市奥武山町51-2 沖縄県体協スポーツ会館3階 303号室" },
+        { no: 72, name: "沖縄県中学校体育連盟", rep: "金城淳", address: "那覇市奥武山町51-2 沖縄県体協スポーツ会館3階 301号室" },
+        { no: 73, name: "一般財団法人 沖縄県高等学校野球連盟", rep: "新垣泰司", address: "宜野湾市大山6-25-9 マンション山本102号" }
+    ];
+
+    // プルダウンを自動生成する処理
+    function populateAffiliatedOrgs() {
+        const select = document.getElementById('in_affiliated_select');
+        let html = '<option value="">-- 団体を選択してください --</option>';
+        
+        AFFILIATED_ORGS.forEach(org => {
+            html += `<option value="${org.no}">${org.no}. ${org.name}</option>`;
+        });
+        
+        html += '<option value="入居団体">入居団体（直接入力）</option>';
+        html += '<option value="その他">その他（直接入力）</option>';
+        select.innerHTML = html;
+    }
+    // ▲ ここまで追加処理 ▲
+
     function toggleCategory() {
         const cat = document.getElementById('in_category').value;
         const orgArea = document.getElementById('affiliated_org_area');
@@ -415,11 +497,24 @@
     function syncOrgName() {
         const selectVal = document.getElementById('in_affiliated_select').value;
         const orgInput = document.getElementById('in_orgName');
-        if (selectVal !== "その他（手入力）" && selectVal !== "") {
-            orgInput.value = selectVal;
-        } else if (selectVal === "その他（手入力）") {
+        const addressInput = document.getElementById('in_address');
+        const repInput = document.getElementById('in_repName');
+
+        // ▼ 選択結果に基づく自動反映の処理 ▼
+        if (selectVal === "その他" || selectVal === "入居団体") {
+            // 手入力の場合はフィールドを空にする
             orgInput.value = "";
+            addressInput.value = "";
+            repInput.value = "";
             orgInput.focus();
+        } else if (selectVal !== "") {
+            // リストから選ばれた場合は、配列から検索して自動入力
+            const org = AFFILIATED_ORGS.find(o => o.no == selectVal);
+            if (org) {
+                orgInput.value = org.name;
+                addressInput.value = org.address;
+                repInput.value = org.rep;
+            }
         }
     }
 
@@ -576,6 +671,8 @@
     }
     
     window.onload = function() {
+        // ▼ プルダウンの生成処理を呼び出す ▼
+        populateAffiliatedOrgs();
         toggleCategory();
         calc();
     };
