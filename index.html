@@ -18,73 +18,73 @@
             --accent-hover: #047857;
             --required-red: #dc2626;
         }
-        body { font-family: "Noto Sans JP", "Helvetica Neue", Arial, sans-serif; background: var(--bg-color); margin: 0; padding: 0; color: var(--text-main); line-height: 1.6; }
+        body { font-family: "Noto Sans JP", "Helvetica Neue", Arial, sans-serif; background: var(--bg-color); margin: 0; padding: 0; color: var(--text-main); line-height: 1.5; }
         
         /* ヘッダー */
-        .app-header { background: var(--gov-blue); color: white; padding: 20px; text-align: center; box-shadow: 0 2px 4px rgba(0,0,0,0.1); margin-bottom: 30px; }
-        .app-header h1 { margin: 0; font-size: 22px; letter-spacing: 1.5px; }
-        .app-header p { margin: 5px 0 0 0; font-size: 12px; opacity: 0.8; }
+        .app-header { background: var(--gov-blue); color: white; padding: 15px; text-align: center; box-shadow: 0 2px 4px rgba(0,0,0,0.1); margin-bottom: 20px; }
+        .app-header h1 { margin: 0; font-size: 20px; letter-spacing: 1.5px; }
+        .app-header p { margin: 4px 0 0 0; font-size: 12px; opacity: 0.8; }
 
-        .no-print-container { max-width: 900px; margin: 0 auto; padding: 0 20px 40px; }
+        .no-print-container { max-width: 900px; margin: 0 auto; padding: 0 15px 30px; }
         
         /* セクションカード */
-        .section-card { background: var(--card-bg); border-radius: 8px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -1px rgba(0,0,0,0.06); padding: 25px; margin-bottom: 25px; border-top: 4px solid var(--gov-blue-light); }
-        .section-title { font-size: 18px; font-weight: bold; color: var(--gov-blue); margin-top: 0; margin-bottom: 20px; display: flex; align-items: center; border-bottom: 1px solid var(--border-color); padding-bottom: 10px; }
+        .section-card { background: var(--card-bg); border-radius: 8px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -1px rgba(0,0,0,0.06); padding: 15px 20px; margin-bottom: 15px; border-top: 4px solid var(--gov-blue-light); }
+        .section-title { font-size: 16px; font-weight: bold; color: var(--gov-blue); margin-top: 0; margin-bottom: 12px; display: flex; align-items: center; border-bottom: 1px solid var(--border-color); padding-bottom: 8px; }
         
         /* 必須バッジ */
         .badge-req { background: var(--required-red); color: white; font-size: 11px; padding: 2px 6px; border-radius: 4px; margin-left: 8px; vertical-align: middle; font-weight: normal; }
 
         /* フォーム要素 */
-        .input-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+        .input-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
         @media (max-width: 600px) { .input-grid { grid-template-columns: 1fr; } }
-        .form-group { margin-bottom: 15px; }
-        label.form-label { display: block; font-weight: bold; margin-bottom: 6px; font-size: 14px; color: #334155; }
+        .form-group { margin-bottom: 10px; }
+        label.form-label { display: block; font-weight: bold; margin-bottom: 4px; font-size: 13px; color: #334155; }
         input[type="text"], input[type="tel"], input[type="number"], input[type="date"], select { 
-            width: 100%; padding: 10px 12px; border: 1px solid var(--border-color); border-radius: 6px; box-sizing: border-box; font-size: 15px; transition: border-color 0.2s; background-color: #f8fafc;
+            width: 100%; padding: 8px 10px; border: 1px solid var(--border-color); border-radius: 6px; box-sizing: border-box; font-size: 14px; transition: border-color 0.2s; background-color: #f8fafc;
         }
         input:focus, select:focus { outline: none; border-color: var(--gov-blue-light); background-color: #fff; box-shadow: 0 0 0 3px rgba(43, 108, 176, 0.1); }
 
         /* 利用区分専用 */
-        .category-select { font-size: 16px; font-weight: bold; padding: 12px; border: 2px solid var(--gov-blue-light); background-color: #eff6ff; }
-        #affiliated_org_area { background: #f0fdf4; padding: 15px; border-radius: 6px; border: 1px solid #bbf7d0; margin-top: 15px; }
+        .category-select { font-size: 15px; font-weight: bold; padding: 10px; border: 2px solid var(--gov-blue-light); background-color: #eff6ff; }
+        #affiliated_org_area { background: #f0fdf4; padding: 10px 15px; border-radius: 6px; border: 1px solid #bbf7d0; margin-top: 10px; }
 
         /* 日時入力エリア */
-        .date-entry-group { background: #f8fafc; border: 1px solid var(--border-color); padding: 15px; border-radius: 6px; margin-bottom: 15px; }
-        .date-row { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+        .date-entry-group { background: #f8fafc; border: 1px solid var(--border-color); padding: 10px 15px; border-radius: 6px; margin-bottom: 10px; }
+        .date-row { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
         .date-label-badge { background: var(--gov-blue); color: white; padding: 4px 8px; border-radius: 4px; font-size: 12px; font-weight: bold; }
-        .date-row select.fac-select { width: 160px; }
-        .date-row input[type="date"] { width: 150px; }
+        .date-row select.fac-select { width: 140px; }
+        .date-row input[type="date"] { width: 140px; }
         .day-display { font-size: 14px; font-weight: bold; color: var(--gov-blue-light); min-width: 3em; }
-        .date-row select.time-select { width: 100px; }
-        .ac-check-label { font-size: 14px; display: flex; align-items: center; cursor: pointer; background: #e0f2fe; padding: 8px 12px; border-radius: 6px; border: 1px solid #bae6fd; margin-left: auto; font-weight: bold; color: #0369a1;}
-        .ac-check-label input { width: 18px; height: 18px; margin-right: 8px; cursor: pointer; }
+        .date-row select.time-select { width: 90px; }
+        .ac-check-label { font-size: 13px; display: flex; align-items: center; cursor: pointer; background: #e0f2fe; padding: 6px 10px; border-radius: 6px; border: 1px solid #bae6fd; margin-left: auto; font-weight: bold; color: #0369a1; transition: opacity 0.2s;}
+        .ac-check-label input { width: 16px; height: 16px; margin-right: 6px; cursor: pointer; }
 
         /* 附帯設備エリア */
-        .eq-group-title { font-size: 14px; font-weight: bold; margin: 15px 0 8px 0; color: var(--gov-blue-light); background: #e2e8f0; padding: 5px 10px; border-radius: 4px; display: inline-block;}
-        .eq-row { display: flex; flex-wrap: wrap; gap: 15px; font-size: 14px; margin-bottom: 10px; align-items: center; }
-        .eq-item { display: flex; align-items: center; cursor: pointer; background: #fff; border: 1px solid var(--border-color); padding: 8px 12px; border-radius: 6px; transition: background 0.2s;}
+        .eq-group-title { font-size: 13px; font-weight: bold; margin: 10px 0 6px 0; color: var(--gov-blue-light); background: #e2e8f0; padding: 4px 8px; border-radius: 4px; display: inline-block;}
+        .eq-row { display: flex; flex-wrap: wrap; gap: 12px; font-size: 13px; margin-bottom: 8px; align-items: center; }
+        .eq-item { display: flex; align-items: center; cursor: pointer; background: #fff; border: 1px solid var(--border-color); padding: 6px 10px; border-radius: 6px; transition: background 0.2s;}
         .eq-item:hover { background: #f1f5f9; }
-        .eq-item input[type="checkbox"] { width: 16px; height: 16px; margin-right: 8px; }
-        .eq-note { font-size: 12px; color: #64748b; margin-bottom: 15px; margin-left: 5px;}
+        .eq-item input[type="checkbox"] { width: 16px; height: 16px; margin-right: 6px; }
+        .eq-note { font-size: 11px; color: #64748b; margin-bottom: 10px; margin-left: 5px;}
 
         /* 計算・出力エリア */
-        .action-area { position: sticky; bottom: 20px; z-index: 100; }
-        .calc-box { background: #fff; padding: 20px; border-radius: 8px; border: 2px solid var(--gov-blue); box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap;}
+        .action-area { position: sticky; bottom: 10px; z-index: 100; }
+        .calc-box { background: #fff; padding: 15px 20px; border-radius: 8px; border: 2px solid var(--gov-blue); box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap;}
         .total-wrapper { text-align: left; }
-        .total-label { font-size: 14px; font-weight: bold; color: #64748b; }
-        .total-price { font-size: 32px; font-weight: bold; color: var(--gov-blue); margin-top: -5px;}
-        .calc-detail-live { font-size: 13px; color: #475569; width: 100%; margin-top: 15px; border-top: 1px dashed var(--border-color); padding-top: 10px; line-height: 1.6; }
-        .print-btn { padding: 15px 30px; background: var(--accent-green); color: white; border: none; border-radius: 6px; font-size: 18px; font-weight: bold; cursor: pointer; transition: background 0.2s; box-shadow: 0 4px 6px rgba(5, 150, 105, 0.3); display: flex; align-items: center; justify-content: center; gap: 8px;}
+        .total-label { font-size: 13px; font-weight: bold; color: #64748b; }
+        .total-price { font-size: 28px; font-weight: bold; color: var(--gov-blue); margin-top: -2px;}
+        .calc-detail-live { font-size: 12px; color: #475569; width: 100%; margin-top: 10px; border-top: 1px dashed var(--border-color); padding-top: 8px; line-height: 1.5; }
+        .print-btn { padding: 12px 24px; background: var(--accent-green); color: white; border: none; border-radius: 6px; font-size: 16px; font-weight: bold; cursor: pointer; transition: background 0.2s; box-shadow: 0 4px 6px rgba(5, 150, 105, 0.3); display: flex; align-items: center; justify-content: center; gap: 8px;}
         .print-btn:hover { background: var(--accent-hover); transform: translateY(-1px); box-shadow: 0 6px 8px rgba(5, 150, 105, 0.4);}
 
         /* 料金表スタイル */
-        .rate-table-wrapper { background: #fff; border: 1px solid var(--border-color); padding: 25px; border-radius: 8px; margin-top: 40px; }
-        .modern-table { width: 100%; border-collapse: collapse; margin-bottom: 25px; font-size: 14px; text-align: center; }
-        .modern-table th { background-color: var(--gov-blue); color: white; border: 1px solid var(--border-color); padding: 12px; font-weight: normal; }
-        .modern-table td { border: 1px solid var(--border-color); padding: 12px; color: var(--text-main); }
+        .rate-table-wrapper { background: #fff; border: 1px solid var(--border-color); padding: 15px 20px; border-radius: 8px; margin-top: 25px; }
+        .modern-table { width: 100%; border-collapse: collapse; margin-bottom: 15px; font-size: 13px; text-align: center; }
+        .modern-table th { background-color: var(--gov-blue); color: white; border: 1px solid var(--border-color); padding: 8px 10px; font-weight: normal; }
+        .modern-table td { border: 1px solid var(--border-color); padding: 8px 10px; color: var(--text-main); }
         .modern-table tr:nth-child(even) td { background-color: #f8fafc; }
-        .table-section-title { font-weight: bold; margin-bottom: 10px; color: var(--gov-blue); font-size: 16px; border-left: 4px solid var(--gov-blue-light); padding-left: 10px;}
-        .table-note { font-size: 12px; font-weight: normal; color: #64748b; margin-left: 10px; }
+        .table-section-title { font-weight: bold; margin-bottom: 8px; margin-top: 15px; color: var(--gov-blue); font-size: 15px; border-left: 4px solid var(--gov-blue-light); padding-left: 10px;}
+        .table-note { font-size: 11px; font-weight: normal; color: #64748b; margin-left: 10px; }
 
         /* =========================================
            印刷・PDF出力用（厳格な原本維持）
@@ -161,7 +161,7 @@
 
     <div class="section-card">
         <h2 class="section-title">3. 使用施設と日時の設定<span class="badge-req">必須</span></h2>
-        <p style="font-size: 13px; color: #64748b; margin-top: -10px; margin-bottom: 15px;">※最大3つの枠まで同時に予約申請が可能です。</p>
+        <p style="font-size: 12px; color: #64748b; margin-top: -8px; margin-bottom: 12px;">※最大3つの枠まで同時に予約申請が可能です。</p>
         <div id="date_entries">
             <script>
                 for(let i=1; i<=3; i++) {
@@ -180,7 +180,7 @@
                             <span id="day_disp_${i}" class="day-display"></span>
                             <select id="time_s${i}" class="time-select" onchange="calc()">${getTimeOptions("09:00")}</select> ～
                             <select id="time_e${i}" class="time-select" onchange="calc()">${getTimeOptions("12:00")}</select>
-                            <label class="ac-check-label"><input type="checkbox" id="ac_${i}" onchange="calc()">空調を利用する</label>
+                            <label class="ac-check-label" id="ac_label_${i}"><input type="checkbox" id="ac_${i}" onchange="calc()">空調を利用する</label>
                         </div>
                     </div>`);
                 }
@@ -205,7 +205,7 @@
         <div class="eq-group-title">【会議室用】</div>
         <div class="eq-row">
             <label class="eq-item"><input type="checkbox" id="check_audio">音響設備</label>
-            <label class="eq-item"><input type="checkbox" id="check_mic">マイク <input type="number" id="in_mic_count" value="0" min="0" style="width:50px; padding:4px; margin:0 5px; border:1px solid #ccc; border-radius:4px;"> 本</label>
+            <label class="eq-item"><input type="checkbox" id="check_mic">マイク <input type="number" id="in_mic_count" value="0" min="0" style="width:40px; padding:2px 4px; margin:0 5px; border:1px solid #ccc; border-radius:4px;"> 本</label>
             <label class="eq-item"><input type="checkbox" id="check_entai">演台</label>
             <label class="eq-item"><input type="checkbox" id="check_proj">映像設備※</label>
         </div>
@@ -219,7 +219,7 @@
         </div>
         <div class="eq-note">※バレー・バドミントンのネット、卓球台は貸出可能です。ボール・シャトル・ラケット等は各自ご持参ください。</div>
 
-        <div class="form-group" style="margin-top: 15px;">
+        <div class="form-group" style="margin-top: 10px;">
             <label class="form-label" style="font-weight: normal;">その他の設備・連絡事項等</label>
             <input type="text" id="in_eq_other" placeholder="必要な場合はご記入ください">
         </div>
@@ -232,7 +232,7 @@
                 <div class="total-price" id="ui_total">￥0</div>
             </div>
             <button class="print-btn" onclick="validateAndPrint()">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 6 2 18 2 18 9"></polyline><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path><rect x="6" y="14" width="12" height="8"></rect></svg>
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 6 2 18 2 18 9"></polyline><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path><rect x="6" y="14" width="12" height="8"></rect></svg>
                 内容を確定してPDF・印刷出力
             </button>
             <div id="ui_detail_log" class="calc-detail-live">施設・日時を選択すると、自動で料金が計算されます。</div>
@@ -240,7 +240,7 @@
     </div>
 
     <div class="rate-table-wrapper">
-        <h3 class="table-section-title" style="border:none; border-bottom: 2px solid var(--border-color); padding-left:0; padding-bottom:10px;">■ 施設使用料（1時間あたり / 税込）</h3>
+        <h3 class="table-section-title" style="border:none; border-bottom: 1px solid var(--border-color); padding-left:0; padding-bottom:8px; margin-top: 0;">■ 施設使用料（1時間あたり / 税込）</h3>
         
         <div class="table-section-title">体育館</div>
         <table class="modern-table">
@@ -264,7 +264,7 @@
             </tr>
         </table>
 
-        <div class="table-section-title" style="margin-top: 30px;">会議室 <span class="table-note">※会議室は「高校生以下」も一般料金が適用されます。</span></div>
+        <div class="table-section-title">会議室 <span class="table-note">※会議室は「高校生以下」も一般料金が適用されます。</span></div>
         <table class="modern-table">
             <tr>
                 <th rowspan="2" style="width: 20%; background-color: #f1f5f9; color:var(--gov-blue); font-weight:bold;">施設名</th>
@@ -300,8 +300,8 @@
             </tr>
         </table>
 
-        <div class="table-section-title" style="margin-top: 30px;">空調使用料 <span class="table-note">※1時間あたり。利用する場合は施設使用料に加算されます。</span></div>
-        <table class="modern-table" style="width: 100%;">
+        <div class="table-section-title">空調使用料 <span class="table-note">※1時間あたり。利用する場合は施設使用料に加算されます。</span></div>
+        <table class="modern-table" style="width: 100%; margin-bottom: 0;">
             <tr>
                 <th>会議室 AB</th>
                 <th>会議室 A</th>
@@ -312,7 +312,7 @@
                 <td>550円</td>
                 <td>330円</td>
                 <td>220円</td>
-                <td>0円</td>
+                <td>設備なし</td>
             </tr>
         </table>
     </div>
@@ -385,14 +385,13 @@
     </table>
 
     <div class="footer-note">
-        【空調代/h】会議室AB:550円、A:330円、B:220円（体育館は0円） ※平日17時以降は夜間料金適用。
+        【空調代/h】会議室AB:550円、A:330円、B:220円（体育館は空調設備なし） ※平日17時以降は夜間料金適用。
     </div>
     <div class="p-total-line">一　金　￥ <span id="p_total_sum"></span> －</div>
     <div class="stamp-box-small">担当</div>
 </div>
 
 <script>
-    // ▼ 加盟団体データの登録 ▼
     const AFFILIATED_ORGS = [
         { no: 1, name: "一般社団法人沖縄県水泳連盟", rep: "川満正芳", address: "浦添市港川2-11-8 沖縄スイミングスクール内" },
         { no: 2, name: "沖縄県ローイング協会", rep: "大城隼人", address: "沖縄市比屋根6-1-30 大城隼人気付" },
@@ -468,20 +467,16 @@
         { no: 73, name: "一般財団法人 沖縄県高等学校野球連盟", rep: "新垣泰司", address: "宜野湾市大山6-25-9 マンション山本102号" }
     ];
 
-    // プルダウンを自動生成する処理
     function populateAffiliatedOrgs() {
         const select = document.getElementById('in_affiliated_select');
         let html = '<option value="">-- 団体を選択してください --</option>';
-        
         AFFILIATED_ORGS.forEach(org => {
             html += `<option value="${org.no}">${org.no}. ${org.name}</option>`;
         });
-        
         html += '<option value="入居団体">入居団体（直接入力）</option>';
         html += '<option value="その他">その他（直接入力）</option>';
         select.innerHTML = html;
     }
-    // ▲ ここまで追加処理 ▲
 
     function toggleCategory() {
         const cat = document.getElementById('in_category').value;
@@ -500,15 +495,12 @@
         const addressInput = document.getElementById('in_address');
         const repInput = document.getElementById('in_repName');
 
-        // ▼ 選択結果に基づく自動反映の処理 ▼
         if (selectVal === "その他" || selectVal === "入居団体") {
-            // 手入力の場合はフィールドを空にする
             orgInput.value = "";
             addressInput.value = "";
             repInput.value = "";
             orgInput.focus();
         } else if (selectVal !== "") {
-            // リストから選ばれた場合は、配列から検索して自動入力
             const org = AFFILIATED_ORGS.find(o => o.no == selectVal);
             if (org) {
                 orgInput.value = org.name;
@@ -535,7 +527,6 @@
 
     function getWareki(date) { return `令和 ${date.getFullYear() - 2018}`; }
 
-    // UI上に曜日や祝日を表示する機能（勘違い防止）
     function updateDayDisplay(i) {
         const dStr = document.getElementById('date_' + i).value;
         const dispEl = document.getElementById('day_disp_' + i);
@@ -545,13 +536,13 @@
         const w = ['日','月','火','水','木','金','土'];
         if(HOLIDAYS.includes(dStr)) {
             dispEl.innerText = "（祝）";
-            dispEl.style.color = "#dc2626"; // 祝日は赤
+            dispEl.style.color = "#dc2626";
         } else if (d.getDay() === 0) {
             dispEl.innerText = "（日）";
             dispEl.style.color = "#dc2626";
         } else if (d.getDay() === 6) {
             dispEl.innerText = "（土）";
-            dispEl.style.color = "#2563eb"; // 土曜は青
+            dispEl.style.color = "#2563eb";
         } else {
             dispEl.innerText = `（${w[d.getDay()]}）`;
             dispEl.style.color = "#1a365d";
@@ -568,7 +559,24 @@
             const dStr = document.getElementById('date_' + i).value;
             const sStr = document.getElementById('time_s' + i).value;
             const eStr = document.getElementById('time_e' + i).value;
-            const isAC = document.getElementById('ac_' + i).checked;
+            const acCheck = document.getElementById('ac_' + i);
+            const acLabel = document.getElementById('ac_label_' + i);
+
+            // ▼ 体育館選択時の空調チェック制御 ▼
+            if (fac === '体育館') {
+                acCheck.checked = false;
+                acCheck.disabled = true;
+                acLabel.style.opacity = '0.5';
+                acLabel.style.cursor = 'not-allowed';
+                acLabel.title = '体育館に空調設備はありません';
+            } else {
+                acCheck.disabled = false;
+                acLabel.style.opacity = '1';
+                acLabel.style.cursor = 'pointer';
+                acLabel.title = '';
+            }
+
+            const isAC = acCheck.checked;
 
             if (fac && dStr && sStr && eStr) {
                 const d = new Date(dStr);
@@ -578,7 +586,7 @@
                 const he = parseInt(eStr.split(':')[0]) + parseInt(eStr.split(':')[1])/60;
                 const totalHours = Math.max(0, he - hs);
 
-                if (totalHours <= 0) continue; // 時間が逆転している場合は計算しない
+                if (totalHours <= 0) continue;
 
                 let targetCat = (fac.includes("会議室") && cat === "高校生以下") ? "その他一般" : cat;
                 const r = RATES[fac][targetCat];
@@ -618,7 +626,6 @@
         document.getElementById('ui_detail_log').innerHTML = logHtml || "施設・日時を選択すると、自動で料金が計算されます。";
     }
 
-    // 簡易的な入力チェックを入れてから印刷へ進む
     function validateAndPrint() {
         const orgName = document.getElementById('in_orgName').value;
         if (!orgName) {
@@ -671,7 +678,6 @@
     }
     
     window.onload = function() {
-        // ▼ プルダウンの生成処理を呼び出す ▼
         populateAffiliatedOrgs();
         toggleCategory();
         calc();
